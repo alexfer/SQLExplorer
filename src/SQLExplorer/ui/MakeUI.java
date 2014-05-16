@@ -47,6 +47,7 @@ public class MakeUI extends JFrame implements ActionListener {
 
 	public MakeUI(Statement stmt) {
 		super(title);
+		
 		statement = stmt;
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

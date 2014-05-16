@@ -101,6 +101,7 @@ public class Login extends JFrame {
 				password.setText("");
 			} else {
 				dispose();
+				Theme.setup();
 				new MakeUI(statement);
 			}
 		}
