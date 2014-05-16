@@ -1,8 +1,6 @@
 package SQLExplorer.ui;
 
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Tables extends DefaultTableCellRenderer {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6118025811358030095L;
 	private JTable table;
 
 	Tables() {
@@ -26,13 +21,36 @@ public class Tables extends DefaultTableCellRenderer {
 	public JTable render(List<ArrayList<String>> data) {
 
 		String[] columns = { "Table", "Rows", "Type", "Collation", "Size",
-				"Overhead", "Actions" };
-		table = new JTable();
+				"Overhead", "" };
+		table = new JTable() {
+			private static final long serialVersionUID = -2336506336532963484L;
+
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				case 0:
+					return String.class;
+				case 1:
+					return Integer.class;
+				case 2:
+					return String.class;
+				case 3:
+					return String.class;
+				case 4:
+					return String.class;
+				case 5:
+					return String.class;
+				default:
+					return Boolean.class;
+				}
+			}
+		};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 
 		model.setColumnIdentifiers(columns);
 		table.setIntercellSpacing(new Dimension(0, -3));
 		table.setRowHeight(20);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
 		for (int i = 0; i < data.size(); i++) {
 			model.insertRow(
@@ -46,19 +64,12 @@ public class Tables extends DefaultTableCellRenderer {
 									+ Integer.parseInt(data.get(i).get(5)),
 									false),
 							convert(data.get(i).get(2).equals("MyISAM") ? Integer
-									.parseInt(data.get(i).get(6)) : 0, false) });
+									.parseInt(data.get(i).get(6)) : 0, false),
+							false });
 		}
-		table.addMouseListener(selectRow);
+		table.getColumnModel().getColumn(6).setPreferredWidth(0);		
 		return table;
 	}
-
-	MouseAdapter selectRow = new MouseAdapter() {
-		public void mouseClicked(MouseEvent e) {
-			String tableName = (String) table.getValueAt(
-					table.getSelectedRow(), 0);
-			System.out.println(tableName);
-		}
-	};
 
 	private String convert(int bytes, boolean si) {
 		int unit = si ? 1000 : 1024;
