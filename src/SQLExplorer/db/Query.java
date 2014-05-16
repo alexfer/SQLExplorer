@@ -12,13 +12,43 @@ import SQLExplorer.ui.MakeUI;
 public class Query {
 	private ResultSet result = null;
 	private MakeUI ui;
+	private List<Object> list = new ArrayList<Object>();
 
 	public Query(MakeUI ui) {
 		this.ui = ui;
 	}
 
+	private String getCollationAt(String charset) {
+		String collation = null;
+		try {
+			result = ui.statement.executeQuery("SHOW CHARACTER SET LIKE '"
+					+ charset + "'");
+			if (result.next()) {
+				collation = result.getString("Default collation");
+			}
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return collation;
+	}
+
+	public List<Object> getCharactes() {
+		try {
+			result = ui.statement.executeQuery("SHOW CHARACTER SET");
+			while (result.next()) {
+				list.add(result.getString("Charset"));
+			}
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return list;
+	}
+
 	public List<Object> listDatabases() {
-		List<Object> list = new ArrayList<Object>();
 		try {
 			result = ui.statement.executeQuery("SHOW DATABASES");
 			while (result.next()) {
@@ -65,18 +95,17 @@ public class Query {
 		}
 	}
 
-	public void addDatabase(String name) {
+	public void addDatabase(String name, String charset) {
 		try {
-			ui.statement.executeUpdate(String.format("CREATE DATABASE `%s`",
-					name));
+			ui.statement.executeUpdate(String.format("CREATE DATABASE `%s` CHARACTER SET %s COLLATE %s",
+					name, charset, getCollationAt(charset)));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
-	public List<String> getMeta(ResultSet result) {
-		List<String> list = new ArrayList<String>();
+	public List<Object> getMeta(ResultSet result) {
 		try {
 			for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
 				list.add(result.getMetaData().getColumnName(i));

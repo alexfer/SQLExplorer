@@ -42,7 +42,7 @@ public class MakeUI extends JFrame implements ActionListener {
 	private JMenuBar menu;
 	private JMenu server, help;
 	private JMenuItem newDatabase, diconnect, contents, about;
-	private static String title = "MySQL Explorer";
+	private static String title = "SQL Explorer";
 	private String manualUrl = "http://dev.mysql.com/doc/#manual";
 
 	public MakeUI(Statement stmt) {
@@ -52,7 +52,7 @@ public class MakeUI extends JFrame implements ActionListener {
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menuBar();
-		build();
+		content();
 		setSize(800, 600);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -84,7 +84,7 @@ public class MakeUI extends JFrame implements ActionListener {
 
 		help = new JMenu("Help");
 		menu.add(help);
-		help.addSeparator();
+		
 		contents = new JMenuItem("Help Contents");
 		help.add(contents);
 
@@ -97,7 +97,7 @@ public class MakeUI extends JFrame implements ActionListener {
 				}
 			}
 		});
-
+		help.addSeparator();
 		about = new JMenuItem("About");
 		help.add(about);
 
@@ -133,7 +133,7 @@ public class MakeUI extends JFrame implements ActionListener {
 		header.setBackground(Color.lightGray);
 	}
 
-	private void build() {
+	private void content() {
 		header();
 		layout = new JPanel();
 		layout.setLayout(new BorderLayout());
@@ -145,7 +145,7 @@ public class MakeUI extends JFrame implements ActionListener {
 		layout.add(table, BorderLayout.CENTER);
 		pane = new JScrollPane(table);
 		add(pane, BorderLayout.CENTER);
-		database.addActionListener(this);
+		database.addActionListener(this);		
 	}
 
 	@Override

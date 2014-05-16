@@ -20,10 +20,11 @@ class DropDatabase extends Confirm implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		int index = ui.database.getSelectedIndex();
-		boolean confirm = super.dialog(ui, "You are about to DESTROY a complete database!");
-
+		String name = ui.database.getSelectedItem().toString();
+		boolean confirm = super.dialog(ui, "Do you have destroy database '"
+				+ name + "'?");
 		if (index >= 0 && confirm) {
-			new Query(ui).dropDatabase(ui.database.getSelectedItem().toString());
+			new Query(ui).dropDatabase(name);
 			ui.database.removeItemAt(index);
 			ui.database.updateUI();
 		}

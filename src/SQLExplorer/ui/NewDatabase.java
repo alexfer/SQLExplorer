@@ -5,10 +5,14 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
@@ -16,18 +20,16 @@ import SQLExplorer.db.Query;
 
 public class NewDatabase extends JDialog {
 
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 168902726944563410L;
+	private static final long serialVersionUID = -7982290802187076010L;
 	JButton create;
 	MakeUI ui;
 	JTextField dbName;
-	NewDatabase(MakeUI ui) {		
+	JComboBox collation;
+
+	NewDatabase(MakeUI ui) {
 		super(ui, "Create Database", true);
 		this.ui = ui;
-		render();		
+		render();
 	}
 
 	private void render() {
@@ -38,36 +40,84 @@ public class NewDatabase extends JDialog {
 		add(ldbName);
 
 		dbName = new JTextField(20);
-		dbName.setBounds(160, 10, 230, 25);
+		dbName.setBounds(120, 10, 270, 25);
 		add(dbName);
-		
+
+		JLabel lcollation = new JLabel("Collation");
+		lcollation.setBounds(10, 40, 120, 25);
+		add(lcollation);
+
+		collation = new JComboBox(new DefaultComboBoxModel(new Query(ui)
+				.getCharactes().toArray()));
+		collation.setBounds(120, 40, 270, 25);
+		add(collation);
+		collation.setSelectedItem("utf8");
+
 		create = new JButton("Create");
-		create.setBounds(130, 140, 120, 25);
-		create.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+		create.setBounds(120, 80, 90, 25);
+		create.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
 		add(create);
-		create.getActionMap().put("Enter", action);
-		create.addActionListener(action);
+
+		create.getActionMap().put("Enter", add);
+		create.addActionListener(add);
+
+		JButton cancel = new JButton("Cancel");
+		cancel.setBounds(210, 80, 90, 25);
+		add(cancel);
+		cancel.addActionListener(close);
+
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setResizable(false);
-		setSize(400, 200);
+		setSize(400, 150);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
-	private Action action = new AbstractAction() {
+	private Action close = new AbstractAction() {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 5692304708975454149L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new Query(ui).addDatabase(dbName.getText().toString());
-			ui.database.addItem(dbName.getText());
-			ui.database.updateUI();
-			ui.database.setSelectedItem(dbName.getText());
 			dispose();
+		}
+	};
+
+	private Action add = new AbstractAction() {
+
+		private static final long serialVersionUID = 5692304708975454149L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Object name = dbName.getText();
+			ComboBoxModel model = ui.database.getModel();
+
+			boolean exists = false;
+
+			for (int i = 0; i < model.getSize(); i++) {
+				if (model.getElementAt(i).equals(name)) {
+					exists = true;
+					break;
+				}
+			}
+			if (name.equals("")) {
+				JOptionPane.showMessageDialog(ui,
+						"Database Name can not be empty.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} else if (exists) {
+				JOptionPane.showMessageDialog(ui, "Database '" + name
+						+ "' already exists. Please choose another name.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+				dbName.setText("");
+			} else {
+				new Query(ui).addDatabase(name.toString(), collation
+						.getSelectedItem().toString());
+				ui.database.addItem(name);
+				ui.database.updateUI();
+				ui.database.setSelectedItem(name);
+				dispose();
+			}
 		}
 	};
 
