@@ -21,12 +21,12 @@ import SQLExplorer.db.Query;
 public class NewDatabase extends JDialog {
 
 	private static final long serialVersionUID = -7982290802187076010L;
-	JButton create;
-	MakeUI ui;
-	JTextField dbName;
-	JComboBox collation;
+	private JButton create;
+	private UI ui;
+	private JTextField dbName;
+	private JComboBox collation;
 
-	NewDatabase(MakeUI ui) {
+	NewDatabase(final UI ui) {
 		super(ui, "Create Database", true);
 		this.ui = ui;
 		render();
@@ -35,7 +35,7 @@ public class NewDatabase extends JDialog {
 	private void render() {
 		setLayout(null);
 
-		JLabel ldbName = new JLabel("Database Name");
+		final JLabel ldbName = new JLabel("Database Name");
 		ldbName.setBounds(10, 10, 120, 25);
 		add(ldbName);
 
@@ -43,7 +43,7 @@ public class NewDatabase extends JDialog {
 		dbName.setBounds(120, 10, 270, 25);
 		add(dbName);
 
-		JLabel lcollation = new JLabel("Collation");
+		final JLabel lcollation = new JLabel("Collation");
 		lcollation.setBounds(10, 40, 120, 25);
 		add(lcollation);
 

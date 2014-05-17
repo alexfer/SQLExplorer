@@ -29,7 +29,7 @@ public class Login extends JFrame {
 	private Statement statement = null;
 
 	public Login() {
-		super("Connect to Database");
+		super("Connect to Server");
 		setSize(350, 210);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -101,7 +101,7 @@ public class Login extends JFrame {
 				password.setText("");
 			} else {
 				dispose();				
-				new MakeUI(statement);
+				new UI(statement);
 			}
 		}
 	};

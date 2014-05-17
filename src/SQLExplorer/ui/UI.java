@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,7 +29,8 @@ import javax.swing.table.DefaultTableModel;
 
 import SQLExplorer.db.Query;
 
-public class MakeUI extends JFrame {
+
+public class UI extends JFrame {
 
 	private static final long serialVersionUID = 6371680321859454577L;
 	public Statement statement = null;
@@ -48,7 +50,7 @@ public class MakeUI extends JFrame {
 	private String[] excludeTable = { "mysql", "information_schema",
 			"performance_schema" };
 
-	public MakeUI(Statement stmt) {
+	public UI(Statement stmt) {
 		super(title);
 
 		statement = stmt;
@@ -69,7 +71,7 @@ public class MakeUI extends JFrame {
 		newDatabase = new JMenuItem("New Database");
 		newDatabase.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				new NewDatabase(MakeUI.this);
+				new NewDatabase(UI.this);
 			}
 		});
 		server.add(newDatabase);
@@ -106,7 +108,7 @@ public class MakeUI extends JFrame {
 
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				JOptionPane.showMessageDialog(MakeUI.this,
+				JOptionPane.showMessageDialog(UI.this,
 						"MySQL Explorer v1.0", "About",
 						JOptionPane.PLAIN_MESSAGE);
 			}
@@ -119,8 +121,8 @@ public class MakeUI extends JFrame {
 		footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JLabel action = new JLabel("Action: ");
 		footer.add(action);
-		actionTbl = new JComboBox(new String[] { "--------", "Empty", "Check",
-				"Optimize", "Drop", "Repair" });
+		actionTbl = new JComboBox(new String[] { "--------", "Check",
+				"Optimize", "Repair", "Empty", "Drop" });
 		footer.add(actionTbl);
 
 		if (in_array(excludeTable, database.getSelectedItem().toString())) {
@@ -176,6 +178,39 @@ public class MakeUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
+			ArrayList<String> tables = new ArrayList<String>();
+
+			for (int i = 0; i < table.getModel().getRowCount(); i++) {
+				if ((Boolean) table.getValueAt(i, 6)) {
+					tables.add(table.getValueAt(i, 0).toString());
+				}
+			}
+
+			if (tables.size() > 0 && actionTbl.getSelectedIndex() > 0) {
+				/*
+				QueryAction action = new QueryAction(UI.this);
+
+				try {
+					Method method = action.getClass().getDeclaredMethod(
+							actionTbl.getSelectedItem().toString()
+									.toLowerCase(),
+									new Class[]{ArrayList.class});
+					try {						
+						method.invoke(action, new Object[] { tables });
+					} catch (IllegalArgumentException ex) {
+						ex.printStackTrace();
+					} catch (IllegalAccessException ex) {
+						ex.printStackTrace();
+					} catch (InvocationTargetException ex) {
+						ex.printStackTrace();
+					}
+				} catch (SecurityException ex) {
+					ex.printStackTrace();
+				} catch (NoSuchMethodException ex) {
+					ex.printStackTrace();
+				}
+				*/
+			}
 		}
 	};
 
@@ -192,7 +227,7 @@ public class MakeUI extends JFrame {
 				String name = database.getSelectedItem().toString();
 				setTitle(title + " - " + name);
 				table.setModel(new DefaultTableModel());
-				table = tables.render(new Query(MakeUI.this).listTables(name));
+				table = tables.render(new Query(UI.this).listTables(name));
 				table.setFillsViewportHeight(true);
 				layout.add(table.getTableHeader(), BorderLayout.NORTH);
 				layout.add(table, BorderLayout.CENTER);
@@ -222,5 +257,14 @@ public class MakeUI extends JFrame {
 			}
 		}
 		return false;
+	}
+	
+	public String join(ArrayList<String> list) {
+		final StringBuilder parts = new StringBuilder();
+		for (String table : list) {
+			parts.append(table);
+			parts.append(", ");
+		}
+		return parts.toString();
 	}
 }

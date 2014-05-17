@@ -11,9 +11,9 @@ class DropDatabase extends Confirm implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = -1891497792293858626L;
-	private MakeUI ui;
+	private UI ui;
 
-	DropDatabase(MakeUI ui) {
+	DropDatabase(UI ui) {
 		this.ui = ui;
 	}
 

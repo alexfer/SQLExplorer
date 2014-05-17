@@ -7,14 +7,14 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import SQLExplorer.ui.MakeUI;
+import SQLExplorer.ui.UI;
 
 public class Query {
 	private ResultSet result = null;
-	private MakeUI ui;
+	private UI ui;
 	private List<Object> list = new ArrayList<Object>();
 
-	public Query(MakeUI ui) {
+	public Query(UI ui) {
 		this.ui = ui;
 	}
 

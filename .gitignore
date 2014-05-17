@@ -4,3 +4,6 @@ bin
 .project
 .src
 
+/src/SQLExplorer/nbproject/private/
+/nbproject/private/
+/SQLExplorer/nbproject/private/
