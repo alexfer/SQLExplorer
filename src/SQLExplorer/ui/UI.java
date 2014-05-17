@@ -28,7 +28,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import SQLExplorer.db.Query;
-
+import SQLExplorer.db.TablesHandler;
 
 public class UI extends JFrame {
 
@@ -108,9 +108,8 @@ public class UI extends JFrame {
 
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				JOptionPane.showMessageDialog(UI.this,
-						"MySQL Explorer v1.0", "About",
-						JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(UI.this, "MySQL Explorer v1.0",
+						"About", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
@@ -187,29 +186,9 @@ public class UI extends JFrame {
 			}
 
 			if (tables.size() > 0 && actionTbl.getSelectedIndex() > 0) {
-				/*
-				QueryAction action = new QueryAction(UI.this);
-
-				try {
-					Method method = action.getClass().getDeclaredMethod(
-							actionTbl.getSelectedItem().toString()
-									.toLowerCase(),
-									new Class[]{ArrayList.class});
-					try {						
-						method.invoke(action, new Object[] { tables });
-					} catch (IllegalArgumentException ex) {
-						ex.printStackTrace();
-					} catch (IllegalAccessException ex) {
-						ex.printStackTrace();
-					} catch (InvocationTargetException ex) {
-						ex.printStackTrace();
-					}
-				} catch (SecurityException ex) {
-					ex.printStackTrace();
-				} catch (NoSuchMethodException ex) {
-					ex.printStackTrace();
-				}
-				*/
+				TablesHandler handler = new TablesHandler(UI.this);
+				handler.action(tables, actionTbl.getSelectedItem().toString()
+						.toLowerCase());
 			}
 		}
 	};
@@ -258,7 +237,7 @@ public class UI extends JFrame {
 		}
 		return false;
 	}
-	
+
 	public String join(ArrayList<String> list) {
 		final StringBuilder parts = new StringBuilder();
 		for (String table : list) {
