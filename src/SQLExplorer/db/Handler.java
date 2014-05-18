@@ -1,6 +1,7 @@
 package SQLExplorer.db;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import SQLExplorer.ui.UI;
@@ -13,15 +14,20 @@ public class Handler {
 		this.ui = ui;
 	}
 
-	public void action(ArrayList<String> names, String action) {
-		System.out.println(String.format("%s TABLE", action.toUpperCase()));
-		/*
-		try {			
-			result = ui.statement.executeQuery(String.format("%s TABLE %s", action.toUpperCase()));
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
-					"Error", JOptionPane.ERROR_MESSAGE);
+	public void action(ArrayList<String> names, String action)
+			throws UISQLException {
+		StringBuilder tables = new StringBuilder();
+		for (int i = 0; i < names.size(); i++) {
+			tables.append(names.get(i));
+			tables.append(", ");
 		}
-		*/		
+		tables.delete(tables.length() - 2, tables.length());		
+
+		try {
+			result = ui.statement.executeQuery(String.format("%s TABLE %s",
+					action.toUpperCase(), tables.toString()));
+		} catch (SQLException e) {
+			throw new UISQLException(e.getMessage());
+		}
 	}
 }

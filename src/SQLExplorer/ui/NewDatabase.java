@@ -2,6 +2,7 @@ package SQLExplorer.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -49,8 +50,8 @@ public class NewDatabase extends JDialog {
 		add(lcollation);
 
 		try {
-			collation = new JComboBox(new DefaultComboBoxModel(new Query(ui)
-					.getCharactes().toArray()));
+			List<Object> charactesr = new Query(ui).getCharactes();
+			collation = new JComboBox(new DefaultComboBoxModel(charactesr.toArray()));
 		} catch (UISQLException e) {
 			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);

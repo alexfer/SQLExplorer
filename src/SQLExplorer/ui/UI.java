@@ -143,18 +143,16 @@ public class UI extends JFrame {
 
 	private void header() {
 		header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		header.add(new JLabel("", new ImageIcon(getClass().getResource(
+				"/resources/icons/database.png")), SwingConstants.LEFT));
 
-		//header.add(new JLabel("", new ImageIcon(getClass().getResource("/resources/icons/database.png")), SwingConstants.LEFT));
-		header.add(new JLabel("Database"));
-
-		List<Object> dbs;
 		try {
-			dbs = new Query(this).listDatabases();
+			List<Object> dbs = new Query(this).listDatabases();
 			database = new JComboBox(new DefaultComboBoxModel(dbs.toArray()));
 		} catch (UISQLException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
-		}		
+		}
 
 		header.add(database);
 		database.setPreferredSize(new Dimension(300, 25));
@@ -207,8 +205,16 @@ public class UI extends JFrame {
 
 			if (tables.size() > 0 && handle.getSelectedIndex() > 0) {
 				Handler handler = new Handler(UI.this);
-				handler.action(tables, handle.getSelectedItem().toString()
-						.toLowerCase());
+				try {
+					handler.action(tables, handle.getSelectedItem().toString()
+							.toLowerCase());
+					pane.updateUI();
+					validate();
+					repaint();
+				} catch (UISQLException ex) {
+					JOptionPane.showMessageDialog(UI.this, ex.getMessage()
+							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	};
@@ -229,8 +235,8 @@ public class UI extends JFrame {
 				try {
 					table = tables.render(new Query(UI.this).listTables(name));
 				} catch (UISQLException ex) {
-					JOptionPane.showMessageDialog(UI.this, ex.getMessage().toString(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(UI.this, ex.getMessage()
+							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				table.setFillsViewportHeight(true);
 				layout.add(table.getTableHeader(), BorderLayout.NORTH);
