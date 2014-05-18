@@ -3,7 +3,10 @@ package SQLExplorer.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
+
 import SQLExplorer.db.Query;
+import SQLExplorer.db.UISQLException;
 
 class DropDatabase extends Confirm implements ActionListener {
 
@@ -24,7 +27,12 @@ class DropDatabase extends Confirm implements ActionListener {
 		boolean confirm = super.dialog(ui, "Do you have destroy database '"
 				+ name + "'?");
 		if (index >= 0 && confirm) {
-			new Query(ui).dropDatabase(name);
+			try {
+				new Query(ui).dropDatabase(name);
+			} catch (UISQLException e) {
+				JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
 			ui.database.removeItemAt(index);
 			ui.database.updateUI();
 		}

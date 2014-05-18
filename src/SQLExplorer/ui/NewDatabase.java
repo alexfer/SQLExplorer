@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import SQLExplorer.db.Query;
+import SQLExplorer.db.UISQLException;
 
 public class NewDatabase extends JDialog {
 
@@ -47,8 +48,13 @@ public class NewDatabase extends JDialog {
 		lcollation.setBounds(10, 40, 120, 25);
 		add(lcollation);
 
-		collation = new JComboBox(new DefaultComboBoxModel(new Query(ui)
-				.getCharactes().toArray()));
+		try {
+			collation = new JComboBox(new DefaultComboBoxModel(new Query(ui)
+					.getCharactes().toArray()));
+		} catch (UISQLException e) {
+			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
 		collation.setBounds(120, 40, 270, 25);
 		add(collation);
 		collation.setSelectedItem("utf8");
@@ -91,7 +97,7 @@ public class NewDatabase extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object name = dbName.getText();
-			ComboBoxModel model = ui.database.getModel();
+			ComboBoxModel<?> model = ui.database.getModel();
 
 			boolean exists = false;
 
@@ -111,8 +117,13 @@ public class NewDatabase extends JDialog {
 						"Error", JOptionPane.ERROR_MESSAGE);
 				dbName.setText("");
 			} else {
-				new Query(ui).addDatabase(name.toString(), collation
-						.getSelectedItem().toString());
+				try {
+					new Query(ui).addDatabase(name.toString(), collation
+							.getSelectedItem().toString());
+				} catch (UISQLException ex) {
+					JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 				ui.database.addItem(name);
 				ui.database.updateUI();
 				ui.database.setSelectedItem(name);

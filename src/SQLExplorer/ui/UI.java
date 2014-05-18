@@ -10,10 +10,12 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,10 +27,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import SQLExplorer.db.Handler;
 import SQLExplorer.db.Query;
-import SQLExplorer.db.TablesHandler;
+import SQLExplorer.db.UISQLException;
 
 public class UI extends JFrame {
 
@@ -36,7 +40,7 @@ public class UI extends JFrame {
 	public Statement statement = null;
 	protected JComboBox database;
 	protected JPanel header, footer;
-	protected static JComboBox actionTbl;
+	protected static JComboBox<Object> handle;
 	private JPanel layout;
 	private Tables tables;
 	private JTable table;
@@ -70,6 +74,7 @@ public class UI extends JFrame {
 
 		newDatabase = new JMenuItem("New Database");
 		newDatabase.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				new NewDatabase(UI.this);
 			}
@@ -82,6 +87,7 @@ public class UI extends JFrame {
 		server.add(diconnect);
 
 		diconnect.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				dispose();
 			}
@@ -94,6 +100,7 @@ public class UI extends JFrame {
 		help.add(contents);
 
 		contents.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				try {
 					Desktop.getDesktop().browse(new URL(manualUrl).toURI());
@@ -107,6 +114,7 @@ public class UI extends JFrame {
 		help.add(about);
 
 		about.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				JOptionPane.showMessageDialog(UI.this, "MySQL Explorer v1.0",
 						"About", JOptionPane.PLAIN_MESSAGE);
@@ -120,27 +128,33 @@ public class UI extends JFrame {
 		footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JLabel action = new JLabel("Action: ");
 		footer.add(action);
-		actionTbl = new JComboBox(new String[] { "--------", "Check",
-				"Optimize", "Repair", "Empty", "Drop" });
-		footer.add(actionTbl);
+		handle = new JComboBox<Object>(new String[] { "--------", "Check",
+				"Optimize", "Repair", "Truncate", "Drop" });
+		footer.add(handle);
 
 		if (in_array(excludeTable, database.getSelectedItem().toString())) {
 			drop.setEnabled(false);
-			actionTbl.setEnabled(false);
+			handle.setEnabled(false);
 		}
-		actionTbl.addActionListener(actionTable);
+		handle.addActionListener(actionTable);
 		add(footer, BorderLayout.SOUTH);
 		footer.setBackground(Color.lightGray);
 	}
 
 	private void header() {
 		header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		//header.add(new JLabel("", new ImageIcon(getClass().getResource("/resources/icons/database.png")), SwingConstants.LEFT));
 		header.add(new JLabel("Database"));
 
-		database = new JComboBox(new DefaultComboBoxModel(new Query(this)
-				.listDatabases().toArray()));
-
-		setTitle(title + " - " + database.getSelectedItem().toString());
+		List<Object> dbs;
+		try {
+			dbs = new Query(this).listDatabases();
+			database = new JComboBox(new DefaultComboBoxModel(dbs.toArray()));
+		} catch (UISQLException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage().toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}		
 
 		header.add(database);
 		database.setPreferredSize(new Dimension(300, 25));
@@ -152,6 +166,7 @@ public class UI extends JFrame {
 
 		add(header, BorderLayout.NORTH);
 		header.setBackground(Color.lightGray);
+		setTitle(title + " - " + database.getSelectedItem().toString());
 	}
 
 	private void content() {
@@ -160,8 +175,13 @@ public class UI extends JFrame {
 		layout.setLayout(new BorderLayout());
 
 		tables = new Tables();
-		table = tables.render(new Query(this).listTables(database
-				.getSelectedItem().toString()));
+		try {
+			table = tables.render(new Query(this).listTables(database
+					.getSelectedItem().toString()));
+		} catch (UISQLException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage().toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
 		layout.add(table.getTableHeader(), BorderLayout.NORTH);
 		layout.add(table, BorderLayout.CENTER);
 		pane = new JScrollPane(table);
@@ -185,9 +205,9 @@ public class UI extends JFrame {
 				}
 			}
 
-			if (tables.size() > 0 && actionTbl.getSelectedIndex() > 0) {
-				TablesHandler handler = new TablesHandler(UI.this);
-				handler.action(tables, actionTbl.getSelectedItem().toString()
+			if (tables.size() > 0 && handle.getSelectedIndex() > 0) {
+				Handler handler = new Handler(UI.this);
+				handler.action(tables, handle.getSelectedItem().toString()
 						.toLowerCase());
 			}
 		}
@@ -202,20 +222,25 @@ public class UI extends JFrame {
 			getContentPane().remove(pane);
 			if (database.getSelectedIndex() >= 0) {
 				drop.setEnabled(true);
-				actionTbl.setEnabled(true);
+				handle.setEnabled(true);
 				String name = database.getSelectedItem().toString();
 				setTitle(title + " - " + name);
 				table.setModel(new DefaultTableModel());
-				table = tables.render(new Query(UI.this).listTables(name));
+				try {
+					table = tables.render(new Query(UI.this).listTables(name));
+				} catch (UISQLException ex) {
+					JOptionPane.showMessageDialog(UI.this, ex.getMessage().toString(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 				table.setFillsViewportHeight(true);
 				layout.add(table.getTableHeader(), BorderLayout.NORTH);
 				layout.add(table, BorderLayout.CENTER);
 				pane = new JScrollPane(table);
 				add(pane, BorderLayout.CENTER);
-				actionTbl.setSelectedIndex(0);
+				handle.setSelectedIndex(0);
 				if (in_array(excludeTable, name)) {
 					drop.setEnabled(false);
-					actionTbl.setEnabled(false);
+					handle.setEnabled(false);
 				}
 			} else {
 				setTitle(title + " - Undefined");
@@ -236,14 +261,5 @@ public class UI extends JFrame {
 			}
 		}
 		return false;
-	}
-
-	public String join(ArrayList<String> list) {
-		final StringBuilder parts = new StringBuilder();
-		for (String table : list) {
-			parts.append(table);
-			parts.append(", ");
-		}
-		return parts.toString();
 	}
 }

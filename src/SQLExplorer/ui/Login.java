@@ -76,7 +76,7 @@ public class Login extends JFrame {
 		lpassword.setBounds(10, 100, 80, 25);
 		panel.add(lpassword);
 
-		password = new JPasswordField(20);
+		password = new JPasswordField("7212104", 20);
 		password.setBounds(100, 100, 230, 25);		 
 		panel.add(password);
 
