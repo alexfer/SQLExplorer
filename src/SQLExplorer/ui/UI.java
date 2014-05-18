@@ -171,21 +171,24 @@ public class UI extends JFrame {
 		header();
 		layout = new JPanel();
 		layout.setLayout(new BorderLayout());
-
-		tables = new Tables();
+		renderTableList(new Tables(), database.getSelectedItem().toString());
+		database.addActionListener(changeDb);		
+		footer();
+	}
+	
+	private void renderTableList(Tables tables, String db) {		
 		try {
-			table = tables.render(new Query(this).listTables(database
-					.getSelectedItem().toString()));
+			table = tables.render(new Query(this).listTables(db));
 		} catch (UISQLException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
-		}
+		}		
 		layout.add(table.getTableHeader(), BorderLayout.NORTH);
 		layout.add(table, BorderLayout.CENTER);
+		table.setFillsViewportHeight(true);		
+		table.updateUI();
 		pane = new JScrollPane(table);
 		add(pane, BorderLayout.CENTER);
-		database.addActionListener(changeDb);
-		footer();
 	}
 
 	private Action actionTable = new AbstractAction() {
@@ -195,26 +198,28 @@ public class UI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			ArrayList<String> tables = new ArrayList<String>();
+			ArrayList<String> selected = new ArrayList<String>();
 
 			for (int i = 0; i < table.getModel().getRowCount(); i++) {
 				if ((Boolean) table.getValueAt(i, 6)) {
-					tables.add(table.getValueAt(i, 0).toString());
+					selected.add(table.getValueAt(i, 0).toString());
 				}
 			}
 
-			if (tables.size() > 0 && handle.getSelectedIndex() > 0) {
+			if (selected.size() > 0 && handle.getSelectedIndex() > 0) {
 				Handler handler = new Handler(UI.this);
 				try {
-					handler.action(tables, handle.getSelectedItem().toString()
-							.toLowerCase());
-					pane.updateUI();
-					validate();
-					repaint();
+					handler.action(selected, handle.getSelectedItem().toString()
+							.toLowerCase());					
 				} catch (UISQLException ex) {
 					JOptionPane.showMessageDialog(UI.this, ex.getMessage()
 							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				}		
+				getContentPane().remove(pane);
+				renderTableList(new Tables(), database.getSelectedItem().toString());
+				pane.updateUI();			
+				validate();
+				repaint();
 			}
 		}
 	};
@@ -231,18 +236,7 @@ public class UI extends JFrame {
 				handle.setEnabled(true);
 				String name = database.getSelectedItem().toString();
 				setTitle(title + " - " + name);
-				table.setModel(new DefaultTableModel());
-				try {
-					table = tables.render(new Query(UI.this).listTables(name));
-				} catch (UISQLException ex) {
-					JOptionPane.showMessageDialog(UI.this, ex.getMessage()
-							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				table.setFillsViewportHeight(true);
-				layout.add(table.getTableHeader(), BorderLayout.NORTH);
-				layout.add(table, BorderLayout.CENTER);
-				pane = new JScrollPane(table);
-				add(pane, BorderLayout.CENTER);
+				renderTableList(new Tables(), name);
 				handle.setSelectedIndex(0);
 				if (in_array(excludeTable, name)) {
 					drop.setEnabled(false);
@@ -254,7 +248,7 @@ public class UI extends JFrame {
 				database.setEnabled(false);
 				footer.setEnabled(false);
 			}
-			pane.updateUI();
+			pane.updateUI();			
 			validate();
 			repaint();
 		}
