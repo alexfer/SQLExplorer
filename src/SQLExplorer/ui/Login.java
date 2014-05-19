@@ -20,10 +20,8 @@ import SQLExplorer.db.Connect;
 import SQLExplorer.db.UISQLException;
 
 public class Login extends JFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7356287014658377659L;
+
+	private static final long serialVersionUID = 1L;
 	private JTextField host, port, username, password;
 	private JLabel lhost, lport, lusername, lpassword;
 	private JButton conn;
@@ -37,7 +35,6 @@ public class Login extends JFrame {
 		JPanel panel = new JPanel();
 		add(panel);
 		placeComponents(panel);
-
 		conn.getActionMap().put("Enter", action);
 		conn.addActionListener(action);
 
@@ -107,7 +104,7 @@ public class Login extends JFrame {
 				password.setText("");
 			} else {
 				dispose();
-				new UI(statement);
+				new UI(statement, username.getText(), password.getText());
 			}
 		}
 	};

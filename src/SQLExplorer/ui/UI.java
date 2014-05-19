@@ -29,6 +29,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
+import tool.Backup;
+import tool.Restore;
+
 import SQLExplorer.db.Handler;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
@@ -37,13 +40,13 @@ public class UI extends JFrame {
 
 	private static final long serialVersionUID = 6371680321859454577L;
 	public Statement statement = null;
-	protected JComboBox<Object> database;
+	public JComboBox<Object> database;
 	protected JPanel header, footer;
 	protected static JComboBox<Object> handle;
 	private JPanel layout;
 	private JTable table;
 	private JScrollPane pane;
-	private JButton drop;
+	private JButton drop, backup, restore;
 	private JMenuBar menu;
 	private JMenu server, help;
 	private JMenuItem newDatabase, info, diconnect, contents, about;
@@ -51,10 +54,12 @@ public class UI extends JFrame {
 	final private String manualUrl = "http://dev.mysql.com/doc/#manual";
 	final private String[] excludeDbs = { "mysql", "information_schema",
 			"performance_schema" };
+	public String user, password;
 
-	public UI(Statement stmt) {
+	public UI(Statement stmt, String user, String password) {
 		super(title);
-
+		this.user = user;
+		this.password = password;
 		statement = stmt;
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -149,39 +154,63 @@ public class UI extends JFrame {
 	}
 
 	private void header() {
+		// Create header panel
 		header = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		header.add(new JLabel("", new ImageIcon(getClass().getResource(
 				"/resources/icons/database.png")), SwingConstants.LEFT));
 
+		// Render database list
 		try {
 			List<Object> dbs = new Query(this).listDatabases();
-			database = new JComboBox<Object>(new DefaultComboBoxModel<Object>(dbs.toArray()));
+			database = new JComboBox<Object>(new DefaultComboBoxModel<Object>(
+					dbs.toArray()));
 		} catch (UISQLException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
-
 		header.add(database);
 		database.setPreferredSize(new Dimension(300, 25));
 
+		// Adding delete database button
 		drop = new JButton("Drop", new ImageIcon(getClass().getResource(
 				"/resources/icons/database_delete.png")));
 		header.add(drop);
-
 		drop.addActionListener(new DropDatabase(this));
 
+		// Backup database
+		backup = new JButton("Backup", new ImageIcon(getClass().getResource(
+				"/resources/icons/database_save.png")));
+		header.add(backup);
+		backup.addActionListener(new Backup(this));
+
+		// Restore database
+		restore = new JButton("Restore", new ImageIcon(getClass().getResource(
+				"/resources/icons/database_save.png")));
+		header.add(restore);
+		restore.addActionListener(new Restore(this, database.getSelectedItem()
+				.toString()));
+
+		// Add header panel to layout
 		add(header, BorderLayout.NORTH);
 		header.setBackground(Color.lightGray);
-		setTitle(title + " - " + database.getSelectedItem().toString());
+
+		// Set frame title
+		setTitle(String.format("%s - %s", title, database.getSelectedItem()
+				.toString()));
 	}
 
 	private void content() {
+		// Append header to panel
 		header();
+
+		// Create panel
 		layout = new JPanel();
 		layout.setLayout(new BorderLayout());
 		renderTableList(new DatabaseTables(), database.getSelectedItem()
 				.toString());
 		database.addActionListener(changeDb);
+
+		// Append footer to panel
 		footer();
 	}
 
@@ -271,5 +300,15 @@ public class UI extends JFrame {
 			}
 		}
 		return false;
+	}
+
+	public String join(ArrayList<?> parts, String separator) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < parts.size(); i++) {
+			builder.append(parts.get(i));
+			builder.append(separator.equals("") ? " " : separator);
+		}
+		builder.delete(builder.length() - 2, builder.length());
+		return builder.toString();
 	}
 }

@@ -10,10 +10,7 @@ import SQLExplorer.db.UISQLException;
 
 class DropDatabase extends Confirm implements ActionListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1891497792293858626L;
+	private static final long serialVersionUID = 1L;
 	private UI ui;
 
 	DropDatabase(UI ui) {

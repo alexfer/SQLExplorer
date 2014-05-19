@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import SQLExplorer.ui.UI;
 
 public class Handler {
-	private UI ui;	
+	private UI ui;
 
 	public Handler(final UI ui) {
 		this.ui = ui;
@@ -15,16 +15,13 @@ public class Handler {
 
 	public void action(ArrayList<String> names, String action)
 			throws UISQLException {
-		StringBuilder tables = new StringBuilder();
-		for (int i = 0; i < names.size(); i++) {
-			tables.append(names.get(i));
-			tables.append(", ");
-		}
-		tables.delete(tables.length() - 2, tables.length());		
-
 		try {
-			ResultSet result = ui.statement.executeQuery(String.format("%s TABLE %s",
-					action.toUpperCase(), tables.toString()));
+			ResultSet result = ui.statement.executeQuery(String.format(
+					"%s TABLE %s", action.toUpperCase(), ui.join(names, ",")));
+
+			while (result.next()) {
+
+			}
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}
