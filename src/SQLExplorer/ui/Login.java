@@ -10,12 +10,14 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import SQLExplorer.db.Connect;
+import SQLExplorer.db.UISQLException;
 
 public class Login extends JFrame {
 	/**
@@ -25,7 +27,6 @@ public class Login extends JFrame {
 	private JTextField host, port, username, password;
 	private JLabel lhost, lport, lusername, lpassword;
 	private JButton conn;
-	private Connect connect;
 	private Statement statement = null;
 
 	public Login() {
@@ -35,10 +36,10 @@ public class Login extends JFrame {
 		setResizable(false);
 		JPanel panel = new JPanel();
 		add(panel);
-		placeComponents(panel);	
+		placeComponents(panel);
 
 		conn.getActionMap().put("Enter", action);
-        conn.addActionListener(action);
+		conn.addActionListener(action);
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -77,30 +78,35 @@ public class Login extends JFrame {
 		panel.add(lpassword);
 
 		password = new JPasswordField("7212104", 20);
-		password.setBounds(100, 100, 230, 25);		 
+		password.setBounds(100, 100, 230, 25);
 		panel.add(password);
 
 		conn = new JButton("Connect");
 		conn.setBounds(130, 140, 120, 25);
-		conn.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+		conn.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
 		panel.add(conn);
 	}
 
 	private Action action = new AbstractAction() {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8008668524930841999L;
+
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			connect = new Connect(host.getText(), Integer.valueOf(port
-					.getText()), username.getText(), password.getText());
-			statement = connect.createStatement(Login.this);
+			final Connect connect = new Connect(host.getText(),
+					Integer.valueOf(port.getText()), username.getText(),
+					password.getText());
+			try {
+				statement = connect.createStatement();
+			} catch (UISQLException ex) {
+				JOptionPane.showMessageDialog(Login.this, ex.getMessage()
+						.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 			if (statement == null) {
 				password.setText("");
 			} else {
-				dispose();				
+				dispose();
 				new UI(statement);
 			}
 		}

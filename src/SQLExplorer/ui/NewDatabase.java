@@ -25,7 +25,7 @@ public class NewDatabase extends JDialog {
 	private static final long serialVersionUID = -7982290802187076010L;
 	private JButton create;
 	private UI ui;
-	private JTextField dbName;
+	private JTextField dbName;	
 	private JComboBox collation;
 
 	NewDatabase(final UI ui) {

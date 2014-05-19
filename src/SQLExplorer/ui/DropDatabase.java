@@ -24,7 +24,7 @@ class DropDatabase extends Confirm implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		int index = ui.database.getSelectedIndex();
 		String name = ui.database.getSelectedItem().toString();
-		boolean confirm = super.dialog(ui, "Do you have destroy database '"
+		boolean confirm = super.dialog(ui, "Are you sure you want to delete database '"
 				+ name + "'?");
 		if (index >= 0 && confirm) {
 			try {

@@ -11,7 +11,7 @@ public class Connect {
 	private String host, user, password;
 	private int port;
 	private Connection connect = null;
-	private Statement statement;
+	private Statement statement = null;
 
 	public Connect(String host, Integer port, String user, String password) {
 		this.host = host;
@@ -20,7 +20,7 @@ public class Connect {
 		this.password = password;
 	}
 
-	public Statement createStatement(JFrame frame) {
+	public Statement createStatement() throws UISQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection("jdbc:mysql://" + this.host
@@ -28,9 +28,7 @@ public class Connect {
 					+ "&password=" + this.password);
 			statement = connect.createStatement();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(frame, e.getMessage().toString(),
-					"Error", JOptionPane.ERROR_MESSAGE);
-			statement = null;
+			throw new UISQLException(e.getMessage());
 		}
 		return statement;
 	}

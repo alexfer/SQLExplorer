@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
 
 import SQLExplorer.db.Handler;
 import SQLExplorer.db.Query;
@@ -41,14 +40,13 @@ public class UI extends JFrame {
 	protected JComboBox database;
 	protected JPanel header, footer;
 	protected static JComboBox<Object> handle;
-	private JPanel layout;
-	private Tables tables;
+	private JPanel layout;	
 	private JTable table;
 	private JScrollPane pane;
 	private JButton drop;
 	private JMenuBar menu;
 	private JMenu server, help;
-	private JMenuItem newDatabase, diconnect, contents, about;
+	private JMenuItem newDatabase, info, diconnect, contents, about;
 	private static String title = "SQL Explorer";
 	private String manualUrl = "http://dev.mysql.com/doc/#manual";
 	private String[] excludeTable = { "mysql", "information_schema",
@@ -80,6 +78,15 @@ public class UI extends JFrame {
 			}
 		});
 		server.add(newDatabase);
+		
+		info = new JMenuItem("Database Server");
+		info.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				//new NewDatabase(UI.this);
+			}
+		});
+		server.add(info);
 
 		server.addSeparator();
 
@@ -171,12 +178,12 @@ public class UI extends JFrame {
 		header();
 		layout = new JPanel();
 		layout.setLayout(new BorderLayout());
-		renderTableList(new Tables(), database.getSelectedItem().toString());
+		renderTableList(new DatabaseTables(), database.getSelectedItem().toString());
 		database.addActionListener(changeDb);		
 		footer();
 	}
 	
-	private void renderTableList(Tables tables, String db) {		
+	private void renderTableList(DatabaseTables tables, String db) {		
 		try {
 			table = tables.render(new Query(this).listTables(db));
 		} catch (UISQLException e) {
@@ -216,7 +223,7 @@ public class UI extends JFrame {
 							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}		
 				getContentPane().remove(pane);
-				renderTableList(new Tables(), database.getSelectedItem().toString());
+				renderTableList(new DatabaseTables(), database.getSelectedItem().toString());
 				pane.updateUI();			
 				validate();
 				repaint();
@@ -236,7 +243,7 @@ public class UI extends JFrame {
 				handle.setEnabled(true);
 				String name = database.getSelectedItem().toString();
 				setTitle(title + " - " + name);
-				renderTableList(new Tables(), name);
+				renderTableList(new DatabaseTables(), name);
 				handle.setSelectedIndex(0);
 				if (in_array(excludeTable, name)) {
 					drop.setEnabled(false);

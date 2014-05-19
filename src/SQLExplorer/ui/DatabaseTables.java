@@ -8,12 +8,12 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class Tables extends DefaultTableCellRenderer {
+public class DatabaseTables extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = -6118025811358030095L;
 	private JTable table;
 
-	Tables() {
+	DatabaseTables() {
 		super();
 		setOpaque(true);
 	}
@@ -48,9 +48,8 @@ public class Tables extends DefaultTableCellRenderer {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 
 		model.setColumnIdentifiers(columns);
-		table.setIntercellSpacing(new Dimension(0, -3));
-		table.setRowHeight(20);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
+		table.setRowHeight(23);
 
 		for (int i = 0; i < data.size(); i++) {
 			model.insertRow(
@@ -67,7 +66,7 @@ public class Tables extends DefaultTableCellRenderer {
 									.parseInt(data.get(i).get(6)) : 0, false),
 							false });
 		}
-		table.getColumnModel().getColumn(6).setPreferredWidth(0);		
+		table.getColumnModel().getColumn(6).setPreferredWidth(0);
 		return table;
 	}
 
