@@ -26,7 +26,7 @@ public class NewDatabase extends JDialog {
 	private JButton create;
 	private UI ui;
 	private JTextField dbName;	
-	private JComboBox collation;
+	private JComboBox<Object> collation;
 
 	NewDatabase(final UI ui) {
 		super(ui, "Create Database", true);
@@ -51,7 +51,7 @@ public class NewDatabase extends JDialog {
 
 		try {
 			List<Object> charactesr = new Query(ui).getCharactes();
-			collation = new JComboBox(new DefaultComboBoxModel(charactesr.toArray()));
+			collation = new JComboBox<Object>(new DefaultComboBoxModel<Object>(charactesr.toArray()));
 		} catch (UISQLException e) {
 			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);

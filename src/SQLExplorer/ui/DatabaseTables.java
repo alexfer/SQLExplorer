@@ -1,17 +1,16 @@
 package SQLExplorer.ui;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class DatabaseTables extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -6118025811358030095L;
-	private JTable table;
+	private static final long serialVersionUID = 1L;
 
 	DatabaseTables() {
 		super();
@@ -20,10 +19,8 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 
 	public JTable render(List<ArrayList<String>> data) {
 
-		String[] columns = { "Table", "Rows", "Type", "Collation", "Size",
-				"Overhead", "" };
-		table = new JTable() {
-			private static final long serialVersionUID = -2336506336532963484L;
+		final JTable table = new JTable() {
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Class<?> getColumnClass(int column) {
@@ -47,8 +44,9 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 		};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-		model.setColumnIdentifiers(columns);
-
+		model.setColumnIdentifiers(new String[] { "Table", "Rows", "Type",
+				"Collation", "Size", "Overhead", "" });
+		
 		table.setRowHeight(23);
 
 		for (int i = 0; i < data.size(); i++) {
@@ -66,7 +64,12 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 									.parseInt(data.get(i).get(6)) : 0, false),
 							false });
 		}
-		table.getColumnModel().getColumn(6).setPreferredWidth(0);
+		
+		int j = table.getColumnCount() -1;
+		
+		table.getColumnModel().getColumn(j).setPreferredWidth(0);		
+		TableColumn tc = table.getColumnModel().getColumn(j);
+        tc.setHeaderRenderer(new SelectAll(table, j));
 		return table;
 	}
 

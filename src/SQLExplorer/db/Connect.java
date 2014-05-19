@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 public class Connect {
 	private String host, user, password;
 	private int port;

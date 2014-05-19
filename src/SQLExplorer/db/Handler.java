@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import SQLExplorer.ui.UI;
 
 public class Handler {
-	private UI ui;
-	private ResultSet result = null;
+	private UI ui;	
 
 	public Handler(final UI ui) {
 		this.ui = ui;
@@ -24,7 +23,7 @@ public class Handler {
 		tables.delete(tables.length() - 2, tables.length());		
 
 		try {
-			result = ui.statement.executeQuery(String.format("%s TABLE %s",
+			ResultSet result = ui.statement.executeQuery(String.format("%s TABLE %s",
 					action.toUpperCase(), tables.toString()));
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
