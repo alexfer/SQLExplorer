@@ -9,13 +9,11 @@ import SQLExplorer.ui.UI;
 
 public class Restore extends Tool implements ActionListener {
 
-	private UI ui;
-	private String name;
+	private UI ui;	
 
-	public Restore(UI ui, String name) {
+	public Restore(UI ui) {
 		super(ui);
-		this.ui = ui;
-		this.name = name;
+		this.ui = ui;		
 	}
 
 	@Override

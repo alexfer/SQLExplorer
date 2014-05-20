@@ -182,14 +182,13 @@ public class UI extends JFrame {
 		backup = new JButton("Backup", new ImageIcon(getClass().getResource(
 				"/resources/icons/database_save.png")));
 		header.add(backup);
-		backup.addActionListener(new Backup(this, new JProgressBar()));
+		backup.addActionListener(new Backup(this));
 
 		// Restore database
 		restore = new JButton("Restore", new ImageIcon(getClass().getResource(
 				"/resources/icons/database_save.png")));
 		header.add(restore);
-		restore.addActionListener(new Restore(this, database.getSelectedItem()
-				.toString()));
+		restore.addActionListener(new Restore(this));
 
 		// Add header panel to layout
 		add(header, BorderLayout.NORTH);
