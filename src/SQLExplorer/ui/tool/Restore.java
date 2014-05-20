@@ -1,4 +1,4 @@
-package tool;
+package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -30,12 +30,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import tool.Backup;
-import tool.Restore;
 
 import SQLExplorer.db.Handler;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
+import SQLExplorer.ui.tool.Backup;
+import SQLExplorer.ui.tool.Restore;
 
 public class UI extends JFrame {
 
