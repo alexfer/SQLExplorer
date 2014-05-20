@@ -1,0 +1,9 @@
+MySQL Explorer
+====================
+
+```
+
+License
+-------
+
+MIT
