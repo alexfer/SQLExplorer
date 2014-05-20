@@ -78,6 +78,8 @@ public class Tool {
 
 			} catch (InterruptedException e) {
 				throw new UISQLException(e.getMessage());
+			} finally {
+				exec.destroy();				
 			}
 		} catch (IOException e) {
 			throw new UISQLException(e.getMessage());

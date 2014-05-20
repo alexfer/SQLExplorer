@@ -11,27 +11,24 @@ import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.Confirm;
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.tool.DirChooser;
 
 public class Backup extends Tool implements ActionListener {
 
 	private UI ui;
 
 	public Backup(UI ui) {
-		super(ui);		
-		this.ui = ui;		
+		super(ui);
+		this.ui = ui;
 	}
 
-	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		
-		JFileChooser chooser = new JFileChooser();
+
+		DirChooser.getInstance();
+		JFileChooser dialog = DirChooser.dialog();
 		String destantion = "/";
 
-		chooser.setCurrentDirectory(new File("."));
-		chooser.setDialogTitle("Select Destination Folder");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
 		Confirm c = new Confirm();
 		boolean confirm = c.dialog(ui,
 				"Do you want to create backup database '"
@@ -41,10 +38,10 @@ public class Backup extends Tool implements ActionListener {
 			return;
 		}
 
-		int jfch = chooser.showOpenDialog(ui);
+		int jfch = dialog.showOpenDialog(ui);
 		if (jfch == JFileChooser.APPROVE_OPTION) {
 			// chooser.getCurrentDirectory()
-			destantion = chooser.getSelectedFile().toString();
+			destantion = dialog.getSelectedFile().toString();
 			try {
 				int completed = super.backup(destantion);
 
@@ -61,7 +58,7 @@ public class Backup extends Tool implements ActionListener {
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else if (jfch == JFileChooser.CANCEL_OPTION) {
-			chooser.setVisible(false);
+			dialog.setVisible(false);
 		}
 
 	}
