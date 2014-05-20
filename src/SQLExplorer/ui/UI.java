@@ -25,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -181,7 +182,7 @@ public class UI extends JFrame {
 		backup = new JButton("Backup", new ImageIcon(getClass().getResource(
 				"/resources/icons/database_save.png")));
 		header.add(backup);
-		backup.addActionListener(new Backup(this));
+		backup.addActionListener(new Backup(this, new JProgressBar()));
 
 		// Restore database
 		restore = new JButton("Restore", new ImageIcon(getClass().getResource(

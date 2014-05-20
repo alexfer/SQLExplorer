@@ -67,15 +67,20 @@ public class Tool {
 					errors.add(line);
 				}
 
+				proc = exec.waitFor();
+
+				if (proc == 2) {
+					return 0;
+				}
 				if (errors.size() > 0) {
 					throw new UISQLException(ui.join(errors, "\n"));
 				}
-				proc = exec.waitFor();
+
 			} catch (InterruptedException e) {
 				throw new UISQLException(e.getMessage());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new UISQLException(e.getMessage());
 		}
 		return proc;
 	}
