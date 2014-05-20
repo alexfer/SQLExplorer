@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.tool.Backup;
 
 public class Tool {
 	private UI ui;
@@ -18,13 +19,19 @@ public class Tool {
 		this.ui = ui;
 	}
 
-	public int backup(String path) throws UISQLException {
-		String name = ui.database.getSelectedItem().toString();
+	public int backup(Backup backup) throws UISQLException {
+		String name = ui.database.getSelectedItem().toString(), file = backup.file
+				.getText();
+		
+		if (file.equals("")) {
+			file = String.format("%s.sql", name);
+		}
+
 		return execute(
 				new String[] { "mysqldump", "--force", "--quick",
 						String.format("--user=%s", ui.user),
 						String.format("--password=%s", ui.password), name },
-				String.format("%s/%s.sql", path, name));
+				String.format("%s/%s", backup.path.getText(), file));
 	}
 
 	public int restore(String path) throws UISQLException {
