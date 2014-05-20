@@ -2,7 +2,6 @@ package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -11,7 +10,6 @@ import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.Confirm;
 import SQLExplorer.ui.UI;
-import SQLExplorer.ui.tool.DirChooser;
 
 public class Backup extends Tool implements ActionListener {
 
@@ -19,7 +17,7 @@ public class Backup extends Tool implements ActionListener {
 
 	public Backup(UI ui) {
 		super(ui);
-		this.ui = ui;
+		this.ui = ui;		
 	}
 
 	@Override
@@ -37,15 +35,15 @@ public class Backup extends Tool implements ActionListener {
 		if (!confirm) {
 			return;
 		}
-
+		ui.setEnabled(false);
 		int jfch = dialog.showOpenDialog(ui);
 		if (jfch == JFileChooser.APPROVE_OPTION) {
-			// chooser.getCurrentDirectory()
 			destantion = dialog.getSelectedFile().toString();
 			try {
 				int completed = super.backup(destantion);
 
 				if (completed == 0) {
+					ui.setEnabled(true);
 					JOptionPane
 							.showMessageDialog(
 									ui,

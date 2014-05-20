@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import SQLExplorer.db.Tool;
-import SQLExplorer.ui.Confirm;
 import SQLExplorer.ui.UI;
 
 public class Restore extends Tool implements ActionListener {

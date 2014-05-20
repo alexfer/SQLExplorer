@@ -25,11 +25,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-
 
 import SQLExplorer.db.Handler;
 import SQLExplorer.db.Query;
@@ -44,7 +42,7 @@ public class UI extends JFrame {
 	public JComboBox<Object> database;
 	protected JPanel header, footer;
 	protected static JComboBox<Object> handle;
-	private JPanel layout;
+	public JPanel layout;
 	private JTable table;
 	private JScrollPane pane;
 	private JButton drop, backup, restore;
@@ -180,13 +178,13 @@ public class UI extends JFrame {
 
 		// Backup database
 		backup = new JButton("Backup", new ImageIcon(getClass().getResource(
-				"/resources/icons/database_save.png")));
+				"/resources/icons/table_row_insert.png")));
 		header.add(backup);
 		backup.addActionListener(new Backup(this));
 
 		// Restore database
 		restore = new JButton("Restore", new ImageIcon(getClass().getResource(
-				"/resources/icons/database_save.png")));
+				"/resources/icons/table_row_delete.png")));
 		header.add(restore);
 		restore.addActionListener(new Restore(this));
 

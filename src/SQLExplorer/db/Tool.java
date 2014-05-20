@@ -35,7 +35,7 @@ public class Tool {
 				String.format("%s/%s.sql", path, name));
 	}
 
-	private void copy(InputStream in, File file) {
+	private void copy(InputStream in, File file) throws UISQLException {
 		try {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
@@ -46,7 +46,7 @@ public class Tool {
 			out.close();
 			in.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new UISQLException(e.getMessage());
 		}
 	}
 
@@ -79,7 +79,7 @@ public class Tool {
 			} catch (InterruptedException e) {
 				throw new UISQLException(e.getMessage());
 			} finally {
-				exec.destroy();				
+				exec.destroy();
 			}
 		} catch (IOException e) {
 			throw new UISQLException(e.getMessage());
