@@ -1,8 +1,6 @@
 MySQL Explorer
 ====================
 
-```
-
 License
 -------
 
