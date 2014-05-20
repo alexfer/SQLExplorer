@@ -14,11 +14,11 @@ public final class DirChooser {
 		return instance;
 	}
 
-	public static JFileChooser dialog() {
+	public static JFileChooser dialog(boolean mode) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		chooser.setDialogTitle("Select Destination Folder");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setFileSelectionMode(mode ? JFileChooser.DIRECTORIES_ONLY : JFileChooser.FILES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
 		return chooser;
 	}

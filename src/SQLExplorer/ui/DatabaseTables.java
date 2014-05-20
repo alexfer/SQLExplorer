@@ -6,13 +6,13 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+//import javax.swing.table.TableColumn;
 
 public class DatabaseTables extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 
-	DatabaseTables() {
+	public DatabaseTables() {
 		super();
 		setOpaque(true);
 	}
@@ -67,9 +67,11 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 		
 		int j = table.getColumnCount() -1;
 		
-		table.getColumnModel().getColumn(j).setPreferredWidth(0);		
+		table.getColumnModel().getColumn(j).setPreferredWidth(0);
+		/*
 		TableColumn tc = table.getColumnModel().getColumn(j);
         tc.setHeaderRenderer(new SelectAll(table, j));
+        */
 		return table;
 	}
 

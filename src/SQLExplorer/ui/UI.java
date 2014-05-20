@@ -32,8 +32,8 @@ import javax.swing.SwingConstants;
 import SQLExplorer.db.Handler;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
-import SQLExplorer.ui.tool.Backup;
-import SQLExplorer.ui.tool.Restore;
+import SQLExplorer.ui.tool.Import;
+import SQLExplorer.ui.tool.Export;
 
 public class UI extends JFrame {
 
@@ -44,7 +44,7 @@ public class UI extends JFrame {
 	protected static JComboBox<Object> handle;
 	public JPanel layout;
 	private JTable table;
-	private JScrollPane pane;
+	public JScrollPane pane;
 	private JButton drop, backup, restore;
 	private JMenuBar menu;
 	private JMenu server, help;
@@ -140,7 +140,7 @@ public class UI extends JFrame {
 		footer.add(new JLabel("", new ImageIcon(getClass().getResource(
 				"/resources/icons/database_go.png")), SwingConstants.LEFT));
 		handle = new JComboBox<Object>(new String[] { "--------", "Check",
-				"Optimize", "Repair", "Truncate", "Drop" });
+				"Optimize", "Repair", "Empty", "Drop" });
 		footer.add(handle);
 
 		if (in_array(excludeDbs, database.getSelectedItem().toString())) {
@@ -180,13 +180,13 @@ public class UI extends JFrame {
 		backup = new JButton("Backup", new ImageIcon(getClass().getResource(
 				"/resources/icons/table_row_insert.png")));
 		header.add(backup);
-		backup.addActionListener(new Backup(this));
+		backup.addActionListener(new Import(this));
 
 		// Restore database
 		restore = new JButton("Restore", new ImageIcon(getClass().getResource(
 				"/resources/icons/table_row_delete.png")));
 		header.add(restore);
-		restore.addActionListener(new Restore(this));
+		restore.addActionListener(new Export(this));
 
 		// Add header panel to layout
 		add(header, BorderLayout.NORTH);
@@ -212,7 +212,7 @@ public class UI extends JFrame {
 		footer();
 	}
 
-	private void renderTableList(DatabaseTables tables, String db) {
+	public void renderTableList(DatabaseTables tables, String db) {
 		try {
 			table = tables.render(new Query(this).listTables(db));
 		} catch (UISQLException e) {
@@ -229,7 +229,7 @@ public class UI extends JFrame {
 
 	private Action actionTable = new AbstractAction() {
 
-		private static final long serialVersionUID = 4034610359758014095L;
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -306,7 +306,7 @@ public class UI extends JFrame {
 			builder.append(parts.get(i));
 			builder.append(separator.equals("") ? " " : separator);
 		}
-		builder.delete(builder.length() - 2, builder.length());
+		builder.delete(builder.length() - 1, builder.length());
 		return builder.toString();
 	}
 }

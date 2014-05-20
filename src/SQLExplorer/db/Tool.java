@@ -10,7 +10,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import SQLExplorer.ui.UI;
-import SQLExplorer.ui.tool.Backup;
+import SQLExplorer.ui.tool.Export;
+import SQLExplorer.ui.tool.Import;
 
 public class Tool {
 	private UI ui;
@@ -19,27 +20,30 @@ public class Tool {
 		this.ui = ui;
 	}
 
-	public int backup(Backup backup) throws UISQLException {
+	public int backup(Import backup) throws UISQLException {
 		String name = ui.database.getSelectedItem().toString(), file = backup.file
 				.getText();
-		
+
 		if (file.equals("")) {
 			file = String.format("%s.sql", name);
 		}
 
 		return execute(
-				new String[] { "mysqldump", "--force", "--quick",
+				new String[] { "mysqldump", "-force", "--quick",
 						String.format("--user=%s", ui.user),
 						String.format("--password=%s", ui.password), name },
 				String.format("%s/%s", backup.path.getText(), file));
 	}
 
-	public int restore(String path) throws UISQLException {
-		String name = ui.database.getSelectedItem().toString();
+	public int restore(Export export) throws UISQLException {
+		String name = ui.database.getSelectedItem().toString(), path = export.path
+				.getText();
+
 		return execute(
-				new String[] { "mysql", String.format("--user=%s", ui.user),
-						String.format("--password=%s", ui.password), name },
-				String.format("%s/%s.sql", path, name));
+				new String[] { "mysql", "-f", name,
+						String.format("--user=%s", ui.user),
+						String.format("--password=%s", ui.password), "-e",
+						String.format(" source %s", path) }, null);
 	}
 
 	private void copy(InputStream in, File file) throws UISQLException {
@@ -62,8 +66,10 @@ public class Tool {
 		try {
 			Process exec = Runtime.getRuntime().exec(cmd);
 			try {
-				InputStream in = exec.getInputStream();
-				copy(in, new File(file));
+				if (!cmd[0].equals("mysql")) {
+					InputStream in = exec.getInputStream();
+					copy(in, new File(file));
+				}
 
 				BufferedReader buffer = new BufferedReader(
 						new InputStreamReader(exec.getErrorStream()));

@@ -17,13 +17,13 @@ import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.UI;
 
-public class Backup extends Tool implements ActionListener {
+public class Import extends Tool implements ActionListener {
 
 	private UI ui;
 	private JDialog dialog;
 	public JTextField path, file;
 
-	public Backup(UI ui) {
+	public Import(UI ui) {
 		super(ui);
 		this.ui = ui;
 	}
@@ -75,7 +75,7 @@ public class Backup extends Tool implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				DirChooser.getInstance();
-				JFileChooser chooser = DirChooser.dialog();
+				JFileChooser chooser = DirChooser.dialog(true);
 				int jfch = chooser.showOpenDialog(ui);
 				if (jfch == JFileChooser.APPROVE_OPTION) {
 					path.setText(chooser.getSelectedFile().toString());
@@ -120,7 +120,7 @@ public class Backup extends Tool implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dialog.setEnabled(false);
 			try {
-				int completed = backup(Backup.this);
+				int completed = backup(Import.this);
 				if (completed == 0) {
 					dialog.dispose();
 					JOptionPane

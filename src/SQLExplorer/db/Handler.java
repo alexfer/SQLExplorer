@@ -16,13 +16,23 @@ public class Handler {
 	public void action(ArrayList<String> names, String action)
 			throws UISQLException {
 		try {
-			ResultSet result = ui.statement.executeQuery(String.format(
-					"%s TABLE %s", action.toUpperCase(), ui.join(names, ",")));
+			if (action.equals("empty")) {
+				for (int i = 0; i < names.size(); i++) {
+					ui.statement.executeUpdate(String.format(
+							"TRUNCATE TABLE %s", names.get(i).toString()));
+				}
+			} else if (!action.equals("drop")) {
+				ResultSet result = ui.statement.executeQuery(String.format(
+						"%s TABLE %s", action.toUpperCase(),
+						ui.join(names, ",")));
+				while (result.next()) {
 
-			while (result.next()) {
-
+				}
+			} else {
+				ui.statement.executeUpdate(String.format(
+						"DROP TABLE IF EXISTS %s", ui.join(names, ",")));
 			}
-		} catch (SQLException e) {
+		} catch (SQLException e) {			
 			throw new UISQLException(e.getMessage());
 		}
 	}
