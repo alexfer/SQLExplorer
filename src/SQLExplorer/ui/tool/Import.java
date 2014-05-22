@@ -48,12 +48,12 @@ public class Import extends Tool implements ActionListener {
 		ldropdb.setBounds(125, 10, 120, 25);
 		dialog.add(ldropdb);
 
-		final JCheckBox dropDb = new JCheckBox();
+		dropDb = new JCheckBox();
 		dropDb.setBounds(220, 12, 20, 20);
 		dropDb.setSelected(true);
 		dialog.add(dropDb);
 		
-		final JLabel lquick = new JLabel("Disable cache");
+		final JLabel lquick = new JLabel("Disable Cache");
 		lquick.setBounds(280, 10, 120, 25);
 		dialog.add(lquick);
 		

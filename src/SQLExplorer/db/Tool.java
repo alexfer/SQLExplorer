@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Export;
@@ -33,7 +35,23 @@ public class Tool {
 				String.format("--password=%s", ui.password), "--databases",
 				name, "--add-drop-database" };
 
-		return execute(args, String.format("%s/%s", im.path.getText(), file));
+		if (!im.quick.isSelected()) {
+			args = removeArgument(args, 2);
+		}
+
+		if (!im.force.isSelected()) {
+			args = removeArgument(args, 1);
+		}
+				
+		if (!im.dropDb.isSelected()) {
+			args = removeArgument(args, 7);
+		}				
+
+		System.out.println(Arrays.toString(args));		
+
+		return 0;
+		// return execute(args, String.format("%s/%s", im.path.getText(),
+		// file));
 	}
 
 	public int restore(Export export) throws UISQLException {
@@ -45,6 +63,17 @@ public class Tool {
 						String.format("--user=%s", ui.user),
 						String.format("--password=%s", ui.password), "-e",
 						String.format(" source %s", path) }, null);
+	}
+
+	public static String[] removeArgument(String[] input, int index) {
+		ArrayList<String> args = new ArrayList<String>();
+		for (String item : input) {
+			//if (!index.equals(item)) {
+				args.add(item);
+			//}			
+		}	
+		args.remove(index);
+		return args.toArray(input);
 	}
 
 	private void copy(InputStream in, File file) throws UISQLException {
