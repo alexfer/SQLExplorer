@@ -107,15 +107,14 @@ public class Export extends Tool implements ActionListener {
 				if (completed == 0) {
 					dialog.dispose();
 					ui.getContentPane().remove(ui.pane);
-					ui.renderTableList(new DatabaseTables(), ui.database
-							.getSelectedItem().toString());
+					ui.renderTableList(new DatabaseTables(), ui.database.getSelectedItem().toString());
 					ui.pane.updateUI();
 					ui.validate();
 					ui.repaint();
 					JOptionPane
 							.showMessageDialog(
 									ui,
-									"Database restore operation has been finished successfully.",
+									"Database export operation has been finished successfully.",
 									"Backup Completed",
 									JOptionPane.INFORMATION_MESSAGE);
 				}

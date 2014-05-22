@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Export;
@@ -20,19 +21,20 @@ public class Tool {
 		this.ui = ui;
 	}
 
-	public int backup(Import backup) throws UISQLException {
-		String name = ui.database.getSelectedItem().toString(), file = backup.file
+	public int backup(Import im) throws UISQLException {
+		String name = ui.database.getSelectedItem().toString(), file = im.file
 				.getText();
 
 		if (file.equals("")) {
 			file = String.format("%s.sql", name);
 		}
 
-		return execute(
-				new String[] { "mysqldump", "-force", "--quick",
-						String.format("--user=%s", ui.user),
-						String.format("--password=%s", ui.password), name },
-				String.format("%s/%s", backup.path.getText(), file));
+		String[] args = { "mysqldump", "--force", "--quick",
+				String.format("--user=%s", ui.user),
+				String.format("--password=%s", ui.password), "--databases",
+				name, "--add-drop-database" };
+		args[1] = null;
+		return execute(args, String.format("%s/%s", im.path.getText(), file));
 	}
 
 	public int restore(Export export) throws UISQLException {
@@ -44,6 +46,13 @@ public class Tool {
 						String.format("--user=%s", ui.user),
 						String.format("--password=%s", ui.password), "-e",
 						String.format(" source %s", path) }, null);
+	}
+
+	static <T> T[] append(T[] arr, T element) {
+		final int N = arr.length;
+		arr = Arrays.copyOf(arr, N + 1);
+		arr[N] = element;
+		return arr;
 	}
 
 	private void copy(InputStream in, File file) throws UISQLException {
@@ -70,14 +79,18 @@ public class Tool {
 					InputStream in = exec.getInputStream();
 					copy(in, new File(file));
 				}
-
-				BufferedReader buffer = new BufferedReader(
-						new InputStreamReader(exec.getErrorStream()));
-				String line = null;
 				ArrayList<String> errors = new ArrayList<String>();
+				try {
+					BufferedReader buffer = new BufferedReader(
+							new InputStreamReader(exec.getErrorStream()));
+					String line = null;
 
-				while ((line = buffer.readLine()) != null) {
-					errors.add(line);
+					while ((line = buffer.readLine()) != null) {
+						errors.add(line);
+					}
+					buffer.close();
+				} catch (IOException ex) {
+
 				}
 
 				proc = exec.waitFor();

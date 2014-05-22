@@ -45,7 +45,7 @@ public class UI extends JFrame {
 	public JPanel layout;
 	private JTable table;
 	public JScrollPane pane;
-	private JButton drop, backup, restore;
+	private JButton drop, backup, export;
 	private JMenuBar menu;
 	private JMenu server, help;
 	private JMenuItem newDatabase, info, diconnect, contents, about;
@@ -177,16 +177,16 @@ public class UI extends JFrame {
 		drop.addActionListener(new DropDatabase(this));
 
 		// Backup database
-		backup = new JButton("Backup", new ImageIcon(getClass().getResource(
-				"/resources/icons/table_row_insert.png")));
+		backup = new JButton("Import", new ImageIcon(getClass().getResource(
+				"/resources/icons/table_row_delete.png")));
 		header.add(backup);
 		backup.addActionListener(new Import(this));
 
 		// Restore database
-		restore = new JButton("Restore", new ImageIcon(getClass().getResource(
-				"/resources/icons/table_row_delete.png")));
-		header.add(restore);
-		restore.addActionListener(new Export(this));
+		export = new JButton("Export", new ImageIcon(getClass().getResource(
+				"/resources/icons/table_row_insert.png")));
+		header.add(export);
+		export.addActionListener(new Export(this));
 
 		// Add header panel to layout
 		add(header, BorderLayout.NORTH);

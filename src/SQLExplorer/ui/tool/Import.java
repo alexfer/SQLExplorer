@@ -11,7 +11,9 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
@@ -22,6 +24,7 @@ public class Import extends Tool implements ActionListener {
 	private UI ui;
 	private JDialog dialog;
 	public JTextField path, file;
+	public JCheckBox quick, dropDb, force;
 
 	public Import(UI ui) {
 		super(ui);
@@ -29,46 +32,59 @@ public class Import extends Tool implements ActionListener {
 	}
 
 	private void renderOptions() {
-		dialog = new JDialog(ui, "Backup Options", true);
+		dialog = new JDialog(ui, "Import Options", true);
 		dialog.setLayout(null);
 
-		final JLabel lerrors = new JLabel("Skip Errors");
-		lerrors.setBounds(10, 10, 120, 25);
-		dialog.add(lerrors);
+		final JLabel lforce = new JLabel("Skip Errors");
+		lforce.setBounds(10, 10, 120, 25);
+		dialog.add(lforce);
 
-		final JCheckBox errors = new JCheckBox();
-		errors.setBounds(150, 10, 20, 20);
-		errors.setSelected(true);
-		dialog.add(errors);
+		force = new JCheckBox();
+		force.setBounds(80, 12, 20, 20);
+		force.setSelected(true);
+		dialog.add(force);
+		
+		final JLabel ldropdb = new JLabel("Drop Database");
+		ldropdb.setBounds(125, 10, 120, 25);
+		dialog.add(ldropdb);
 
-		final JLabel lcache = new JLabel("Disable cache");
-		lcache.setBounds(250, 10, 120, 25);
-		dialog.add(lcache);
-
-		final JCheckBox cache = new JCheckBox();
-		cache.setBounds(350, 10, 20, 20);
-		cache.setSelected(true);
-		dialog.add(cache);
+		final JCheckBox dropDb = new JCheckBox();
+		dropDb.setBounds(220, 12, 20, 20);
+		dropDb.setSelected(true);
+		dialog.add(dropDb);
+		
+		final JLabel lquick = new JLabel("Disable cache");
+		lquick.setBounds(280, 10, 120, 25);
+		dialog.add(lquick);
+		
+		quick = new JCheckBox();
+		quick.setBounds(370, 12, 20, 20);
+		quick.setSelected(true);
+		dialog.add(quick);
+		
+		final JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
+		sep.setBounds(10, 35, 380, 5);
+		dialog.add(sep);
 
 		final JLabel ldir = new JLabel("Destination Folder");
-		ldir.setBounds(10, 40, 120, 25);
+		ldir.setBounds(10, 45, 120, 25);
 		dialog.add(ldir);
 
 		path = new JTextField(System.getProperty("user.home"));
-		path.setBounds(150, 40, 150, 25);
+		path.setBounds(130, 45, 180, 25);
 		dialog.add(path);
 
 		final JButton dir = new JButton("Choose");
-		dir.setBounds(300, 40, 80, 25);
+		dir.setBounds(310, 45, 80, 25);
 		dialog.add(dir);
 
 		final JLabel lfile = new JLabel("File Name");
-		lfile.setBounds(10, 70, 120, 25);
+		lfile.setBounds(10, 75, 120, 25);
 		dialog.add(lfile);
 
 		file = new JTextField(String.format("%s.sql", ui.database
 				.getSelectedItem().toString()));
-		file.setBounds(150, 70, 230, 25);
+		file.setBounds(130, 75, 260, 25);
 		dialog.add(file);
 
 		dir.addActionListener(new ActionListener() {
@@ -126,7 +142,7 @@ public class Import extends Tool implements ActionListener {
 					JOptionPane
 							.showMessageDialog(
 									ui,
-									"Database backup operation has been finished successfully.",
+									"Database import operation has been finished successfully.",
 									"Backup Completed",
 									JOptionPane.INFORMATION_MESSAGE);
 				}
