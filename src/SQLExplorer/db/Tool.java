@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Export;
@@ -33,7 +32,7 @@ public class Tool {
 				String.format("--user=%s", ui.user),
 				String.format("--password=%s", ui.password), "--databases",
 				name, "--add-drop-database" };
-		
+
 		return execute(args, String.format("%s/%s", im.path.getText(), file));
 	}
 
@@ -46,13 +45,6 @@ public class Tool {
 						String.format("--user=%s", ui.user),
 						String.format("--password=%s", ui.password), "-e",
 						String.format(" source %s", path) }, null);
-	}
-
-	static <T> T[] append(T[] arr, T element) {
-		final int N = arr.length;
-		arr = Arrays.copyOf(arr, N + 1);
-		arr[N] = element;
-		return arr;
 	}
 
 	private void copy(InputStream in, File file) throws UISQLException {
