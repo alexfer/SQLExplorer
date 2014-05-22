@@ -33,7 +33,7 @@ public class Tool {
 				String.format("--user=%s", ui.user),
 				String.format("--password=%s", ui.password), "--databases",
 				name, "--add-drop-database" };
-		args[1] = null;
+		
 		return execute(args, String.format("%s/%s", im.path.getText(), file));
 	}
 
