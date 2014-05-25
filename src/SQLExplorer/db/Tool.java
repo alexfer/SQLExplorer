@@ -18,10 +18,32 @@ import SQLExplorer.ui.tool.Import;
 public class Tool {
 	private UI ui;
 
+	/**
+	 * 
+	 * @param ui
+	 */
 	public Tool(UI ui) {
 		this.ui = ui;
 	}
+	
+	/**
+	 * 
+	 * @param input List arguments
+	 * @param index Element that needs to removing
+	 * @return Returns new list arguments
+	 */
+	public static String[] removeArgument(String[] array, String value) {
+		List<String> args = new ArrayList<String>(Arrays.asList(array));
+		args.remove(value);
+		return args.toArray(new String[0]);
+	}
 
+	/**
+	 * 
+	 * @param im
+	 * @return
+	 * @throws UISQLException
+	 */
 	public int backup(Import im) throws UISQLException {
 		String name = ui.database.getSelectedItem().toString(), file = im.file
 				.getText();
@@ -35,25 +57,28 @@ public class Tool {
 				String.format("--password=%s", ui.password), "--databases",
 				name, "--add-drop-database" };
 
-		if (!im.quick.isSelected()) {
-			args = removeArgument(args, 2);
+		if (!im.quick.isSelected()) {			
+			args = removeArgument(args, "--quick");
 		}
 
-		if (!im.force.isSelected()) {
-			args = removeArgument(args, 1);
+		if (!im.force.isSelected()) {			
+			args = removeArgument(args, "--force");
 		}
 				
-		if (!im.dropDb.isSelected()) {
-			args = removeArgument(args, 7);
+		if (!im.dropDb.isSelected()) {			
+			args = removeArgument(args, "--add-drop-database");
+			args = removeArgument(args, "--databases");
 		}				
 
-		System.out.println(Arrays.toString(args));		
-
-		return 0;
-		// return execute(args, String.format("%s/%s", im.path.getText(),
-		// file));
+		return execute(args, String.format("%s/%s", im.path.getText(), file));
 	}
-
+	
+	/**
+	 * 
+	 * @param export
+	 * @return
+	 * @throws UISQLException
+	 */
 	public int restore(Export export) throws UISQLException {
 		String name = ui.database.getSelectedItem().toString(), path = export.path
 				.getText();
@@ -65,17 +90,12 @@ public class Tool {
 						String.format(" source %s", path) }, null);
 	}
 
-	public static String[] removeArgument(String[] input, int index) {
-		ArrayList<String> args = new ArrayList<String>();
-		for (String item : input) {
-			//if (!index.equals(item)) {
-				args.add(item);
-			//}			
-		}	
-		args.remove(index);
-		return args.toArray(input);
-	}
-
+	/**
+	 * 
+	 * @param in
+	 * @param file
+	 * @throws UISQLException
+	 */
 	private void copy(InputStream in, File file) throws UISQLException {
 		try {
 			OutputStream out = new FileOutputStream(file);
@@ -91,6 +111,13 @@ public class Tool {
 		}
 	}
 
+	/**
+	 * 
+	 * @param cmd
+	 * @param file
+	 * @return
+	 * @throws UISQLException
+	 */
 	private int execute(String[] cmd, String file) throws UISQLException {
 		int proc = 0;
 		try {
