@@ -17,7 +17,7 @@ public final class DirChooser {
 	public static JFileChooser dialog(boolean mode) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		chooser.setDialogTitle("Select Destination Folder");
+		chooser.setDialogTitle(mode ? "Select Destination Folder" : "Select Destination File");
 		chooser.setFileSelectionMode(mode ? JFileChooser.DIRECTORIES_ONLY : JFileChooser.FILES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
 		return chooser;

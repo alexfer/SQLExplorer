@@ -107,8 +107,7 @@ public class Import extends Tool implements ActionListener {
 			dialog.setEnabled(false);
 			try {
 				int completed = restore(Import.this);
-				if (completed == 0) {
-					dialog.dispose();					
+				if (completed == 0) {										
 					try {
 						// Rendering new a list of databases
 						List<Object> dbs = new Query(ui).listDatabases();
@@ -129,11 +128,11 @@ public class Import extends Tool implements ActionListener {
 									"Backup Completed",
 									JOptionPane.INFORMATION_MESSAGE);
 				}
-			} catch (UISQLException ex) {
-				dialog.dispose();
+			} catch (UISQLException ex) {				
 				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}
+			dialog.dispose();
 		}
 	};
 

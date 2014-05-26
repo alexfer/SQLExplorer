@@ -43,7 +43,7 @@ public class Export extends Tool implements ActionListener {
 		force.setBounds(80, 12, 20, 20);
 		force.setSelected(true);
 		dialog.add(force);
-		
+
 		final JLabel ldropdb = new JLabel("Drop Database");
 		ldropdb.setBounds(135, 10, 120, 25);
 		dialog.add(ldropdb);
@@ -52,16 +52,16 @@ public class Export extends Tool implements ActionListener {
 		dropDb.setBounds(230, 12, 20, 20);
 		dropDb.setSelected(true);
 		dialog.add(dropDb);
-		
+
 		final JLabel lquick = new JLabel("Disable Cache");
 		lquick.setBounds(280, 10, 120, 25);
 		dialog.add(lquick);
-		
+
 		quick = new JCheckBox();
 		quick.setBounds(370, 12, 20, 20);
 		quick.setSelected(true);
 		dialog.add(quick);
-		
+
 		final JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
 		sep.setBounds(10, 35, 380, 5);
 		dialog.add(sep);
@@ -134,11 +134,9 @@ public class Export extends Tool implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dialog.setEnabled(false);
 			try {
 				int completed = export(Export.this);
 				if (completed == 0) {
-					dialog.dispose();
 					JOptionPane
 							.showMessageDialog(
 									ui,
@@ -147,10 +145,10 @@ public class Export extends Tool implements ActionListener {
 									JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (UISQLException ex) {
-				dialog.dispose();
 				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}
+			dialog.dispose();
 		}
 	};
 
