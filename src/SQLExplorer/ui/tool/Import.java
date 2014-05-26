@@ -2,19 +2,20 @@ package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
+import SQLExplorer.db.Query;
 import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.UI;
@@ -24,7 +25,7 @@ public class Import extends Tool implements ActionListener {
 	private UI ui;
 	private JDialog dialog;
 	public JTextField path, file;
-	public JCheckBox quick, dropDb, force;
+	public JCheckBox force;
 
 	public Import(UI ui) {
 		super(ui);
@@ -32,7 +33,7 @@ public class Import extends Tool implements ActionListener {
 	}
 
 	private void renderOptions() {
-		dialog = new JDialog(ui, "Import Options", true);
+		dialog = new JDialog(ui, "Export Options", true);
 		dialog.setLayout(null);
 
 		final JLabel lforce = new JLabel("Skip Errors");
@@ -40,58 +41,27 @@ public class Import extends Tool implements ActionListener {
 		dialog.add(lforce);
 
 		force = new JCheckBox();
-		force.setBounds(80, 12, 20, 20);
+		force.setBounds(95, 12, 20, 20);
 		force.setSelected(true);
 		dialog.add(force);
-		
-		final JLabel ldropdb = new JLabel("Drop Database");
-		ldropdb.setBounds(125, 10, 120, 25);
-		dialog.add(ldropdb);
 
-		dropDb = new JCheckBox();
-		dropDb.setBounds(220, 12, 20, 20);
-		dropDb.setSelected(true);
-		dialog.add(dropDb);
-		
-		final JLabel lquick = new JLabel("Disable Cache");
-		lquick.setBounds(280, 10, 120, 25);
-		dialog.add(lquick);
-		
-		quick = new JCheckBox();
-		quick.setBounds(370, 12, 20, 20);
-		quick.setSelected(true);
-		dialog.add(quick);
-		
-		final JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
-		sep.setBounds(10, 35, 380, 5);
-		dialog.add(sep);
-
-		final JLabel ldir = new JLabel("Destination Folder");
-		ldir.setBounds(10, 45, 120, 25);
-		dialog.add(ldir);
-
-		path = new JTextField(System.getProperty("user.home"));
-		path.setBounds(130, 45, 180, 25);
-		dialog.add(path);
-
-		final JButton dir = new JButton("Choose");
-		dir.setBounds(310, 45, 80, 25);
-		dialog.add(dir);
-
-		final JLabel lfile = new JLabel("File Name");
-		lfile.setBounds(10, 75, 120, 25);
+		final JLabel lfile = new JLabel("File to Import");
+		lfile.setBounds(10, 40, 120, 25);
 		dialog.add(lfile);
 
-		file = new JTextField(String.format("%s.sql", ui.database
-				.getSelectedItem().toString()));
-		file.setBounds(130, 75, 260, 25);
-		dialog.add(file);
+		path = new JTextField(System.getProperty("user.home"));
+		path.setBounds(95, 40, 215, 25);
+		dialog.add(path);
 
-		dir.addActionListener(new ActionListener() {
+		final JButton choose = new JButton("Choose");
+		choose.setBounds(310, 40, 80, 25);
+		dialog.add(choose);
+
+		choose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				DirChooser.getInstance();
-				JFileChooser chooser = DirChooser.dialog(true);
+				JFileChooser chooser = DirChooser.dialog(false);
 				int jfch = chooser.showOpenDialog(ui);
 				if (jfch == JFileChooser.APPROVE_OPTION) {
 					path.setText(chooser.getSelectedFile().toString());
@@ -101,19 +71,19 @@ public class Import extends Tool implements ActionListener {
 			}
 		});
 
-		final JButton create = new JButton("Create");
-		create.setBounds(120, 110, 90, 25);
+		final JButton create = new JButton("Import");
+		create.setBounds(120, 80, 90, 25);
 		dialog.add(create);
 		create.addActionListener(run);
 
 		final JButton cancel = new JButton("Cancel");
-		cancel.setBounds(210, 110, 90, 25);
+		cancel.setBounds(210, 80, 90, 25);
 		dialog.add(cancel);
 		cancel.addActionListener(close);
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setResizable(false);
-		dialog.setSize(400, 180);
+		dialog.setSize(400, 150);
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
@@ -136,13 +106,26 @@ public class Import extends Tool implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dialog.setEnabled(false);
 			try {
-				int completed = backup(Import.this);
+				int completed = restore(Import.this);
 				if (completed == 0) {
 					dialog.dispose();
+					// Render a list of databases
+					try {
+						List<Object> dbs = new Query(ui).listDatabases();
+						DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<Object>(
+								dbs.toArray());
+						ui.database.setModel(model);
+						ui.database.setSelectedIndex(0);
+					} catch (UISQLException ex) {
+						JOptionPane
+								.showMessageDialog(ui, ex.getMessage()
+										.toString(), "Error",
+										JOptionPane.ERROR_MESSAGE);
+					}
 					JOptionPane
 							.showMessageDialog(
 									ui,
-									"Database import operation has been finished successfully.",
+									"Database export operation has been finished successfully.",
 									"Backup Completed",
 									JOptionPane.INFORMATION_MESSAGE);
 				}

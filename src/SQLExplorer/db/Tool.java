@@ -40,12 +40,12 @@ public class Tool {
 
 	/**
 	 * 
-	 * @param im
+	 * @param exp
 	 * @return
 	 * @throws UISQLException
 	 */
-	public int backup(Import im) throws UISQLException {
-		String name = ui.database.getSelectedItem().toString(), file = im.file
+	public int export(Export exp) throws UISQLException {
+		String name = ui.database.getSelectedItem().toString(), file = exp.file
 				.getText();
 
 		if (file.equals("")) {
@@ -57,37 +57,42 @@ public class Tool {
 				String.format("--password=%s", ui.password), "--databases",
 				name, "--add-drop-database" };
 
-		if (!im.quick.isSelected()) {			
+		if (!exp.quick.isSelected()) {			
 			args = removeArgument(args, "--quick");
 		}
 
-		if (!im.force.isSelected()) {			
+		if (!exp.force.isSelected()) {			
 			args = removeArgument(args, "--force");
 		}
 				
-		if (!im.dropDb.isSelected()) {			
+		if (!exp.dropDb.isSelected()) {			
 			args = removeArgument(args, "--add-drop-database");
 			args = removeArgument(args, "--databases");
 		}				
 
-		return execute(args, String.format("%s/%s", im.path.getText(), file));
+		return execute(args, String.format("%s/%s", exp.path.getText(), file));
 	}
 	
 	/**
 	 * 
-	 * @param export
+	 * @param im
 	 * @return
 	 * @throws UISQLException
 	 */
-	public int restore(Export export) throws UISQLException {
-		String name = ui.database.getSelectedItem().toString(), path = export.path
+	public int restore(Import im) throws UISQLException {
+		String name = ui.database.getSelectedItem().toString(), path = im.path
 				.getText();
+		String[] args = { "mysql", "--force", name,
+				String.format("--user=%s", ui.user),
+				String.format("--password=%s", ui.password), "-e",
+				String.format(" source %s", path) };
+		
+		if (!im.force.isSelected()) {			
+			args = removeArgument(args, "--force");
+		}
 
 		return execute(
-				new String[] { "mysql", "-f", name,
-						String.format("--user=%s", ui.user),
-						String.format("--password=%s", ui.password), "-e",
-						String.format(" source %s", path) }, null);
+				args, null);
 	}
 
 	/**

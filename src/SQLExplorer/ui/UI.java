@@ -176,17 +176,17 @@ public class UI extends JFrame {
 		header.add(drop);
 		drop.addActionListener(new DropDatabase(this));
 
-		// Backup database
-		backup = new JButton("Import", new ImageIcon(getClass().getResource(
-				"/resources/icons/table_row_delete.png")));
-		header.add(backup);
-		backup.addActionListener(new Import(this));
-
-		// Restore database
+		// Export database
 		export = new JButton("Export", new ImageIcon(getClass().getResource(
 				"/resources/icons/table_row_insert.png")));
 		header.add(export);
 		export.addActionListener(new Export(this));
+
+		// Import database
+		backup = new JButton("Import", new ImageIcon(getClass().getResource(
+				"/resources/icons/table_row_delete.png")));
+		header.add(backup);
+		backup.addActionListener(new Import(this));
 
 		// Add header panel to layout
 		add(header, BorderLayout.NORTH);
