@@ -31,7 +31,7 @@ public class Export extends Tool implements ActionListener {
 		this.ui = ui;
 	}
 
-	private void renderOptions() {
+	private void renderDialog() {
 		dialog = new JDialog(ui, "Export Options", true);
 		dialog.setLayout(null);
 
@@ -156,6 +156,6 @@ public class Export extends Tool implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		renderOptions();
+		renderDialog();
 	}
 }

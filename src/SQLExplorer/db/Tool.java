@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Export;
@@ -17,6 +18,7 @@ import SQLExplorer.ui.tool.Import;
 
 public class Tool {
 	private UI ui;
+	private Preferences prefs;
 
 	/**
 	 * 
@@ -24,12 +26,15 @@ public class Tool {
 	 */
 	public Tool(UI ui) {
 		this.ui = ui;
+		prefs = Preferences.userNodeForPackage(UI.class);
 	}
-	
+
 	/**
 	 * 
-	 * @param input List arguments
-	 * @param index Element that needs to removing
+	 * @param input
+	 *            List arguments
+	 * @param index
+	 *            Element that needs to removing
 	 * @return Returns new list arguments
 	 */
 	public static String[] removeArgument(String[] array, String value) {
@@ -52,27 +57,27 @@ public class Tool {
 			file = String.format("%s.sql", name);
 		}
 
-		String[] args = { "mysqldump", "--force", "--quick",
+		String[] args = { prefs.get("mysqldump", ""), "--force", "--quick",
 				String.format("--user=%s", ui.user),
 				String.format("--password=%s", ui.password), "--databases",
 				name, "--add-drop-database" };
 
-		if (!exp.quick.isSelected()) {			
+		if (!exp.quick.isSelected()) {
 			args = removeArgument(args, "--quick");
 		}
 
-		if (!exp.force.isSelected()) {			
+		if (!exp.force.isSelected()) {
 			args = removeArgument(args, "--force");
 		}
-				
-		if (!exp.dropDb.isSelected()) {			
+
+		if (!exp.dropDb.isSelected()) {
 			args = removeArgument(args, "--add-drop-database");
 			args = removeArgument(args, "--databases");
-		}				
+		}
 
 		return execute(args, String.format("%s/%s", exp.path.getText(), file));
 	}
-	
+
 	/**
 	 * 
 	 * @param im
@@ -82,17 +87,16 @@ public class Tool {
 	public int restore(Import im) throws UISQLException {
 		String name = ui.database.getSelectedItem().toString(), path = im.path
 				.getText();
-		String[] args = { "mysql", "--force", name,
+		String[] args = { prefs.get("mysql", ""), "--force", name,
 				String.format("--user=%s", ui.user),
 				String.format("--password=%s", ui.password), "-e",
 				String.format(" source %s", path) };
-		
-		if (!im.force.isSelected()) {			
+
+		if (!im.force.isSelected()) {
 			args = removeArgument(args, "--force");
 		}
 
-		return execute(
-				args, null);
+		return execute(args, null);
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class Tool {
 		try {
 			Process exec = Runtime.getRuntime().exec(cmd);
 			try {
-				if (!cmd[0].equals("mysql")) {
+				if (!cmd[0].equals(prefs.get("mysql", ""))) {
 					InputStream in = exec.getInputStream();
 					copy(in, new File(file));
 				}

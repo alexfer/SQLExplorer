@@ -32,8 +32,8 @@ public class Import extends Tool implements ActionListener {
 		this.ui = ui;
 	}
 
-	private void renderOptions() {
-		dialog = new JDialog(ui, "Export Options", true);
+	private void renderDialog() {
+		dialog = new JDialog(ui, "Import Options", true);
 		dialog.setLayout(null);
 
 		final JLabel lforce = new JLabel("Skip Errors");
@@ -72,18 +72,18 @@ public class Import extends Tool implements ActionListener {
 		});
 
 		final JButton create = new JButton("Import");
-		create.setBounds(120, 80, 90, 25);
+		create.setBounds(120, 75, 90, 25);
 		dialog.add(create);
 		create.addActionListener(run);
 
 		final JButton cancel = new JButton("Cancel");
-		cancel.setBounds(210, 80, 90, 25);
+		cancel.setBounds(210, 75, 90, 25);
 		dialog.add(cancel);
 		cancel.addActionListener(close);
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setResizable(false);
-		dialog.setSize(400, 150);
+		dialog.setSize(400, 145);
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
@@ -108,9 +108,9 @@ public class Import extends Tool implements ActionListener {
 			try {
 				int completed = restore(Import.this);
 				if (completed == 0) {
-					dialog.dispose();
-					// Render a list of databases
+					dialog.dispose();					
 					try {
+						// Rendering new a list of databases
 						List<Object> dbs = new Query(ui).listDatabases();
 						DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<Object>(
 								dbs.toArray());
@@ -139,6 +139,6 @@ public class Import extends Tool implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		renderOptions();
+		renderDialog();
 	}
 }

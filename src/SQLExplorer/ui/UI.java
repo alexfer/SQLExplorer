@@ -34,6 +34,7 @@ import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.tool.Import;
 import SQLExplorer.ui.tool.Export;
+import SQLExplorer.ui.tool.Prefs;
 
 public class UI extends JFrame {
 
@@ -47,8 +48,8 @@ public class UI extends JFrame {
 	public JScrollPane pane;
 	private JButton drop, backup, export;
 	private JMenuBar menu;
-	private JMenu server, help;
-	private JMenuItem newDatabase, info, diconnect, contents, about;
+	private JMenu server, window, help;
+	private JMenuItem newDatabase, info, diconnect, contents, about, preferences;
 	final private static String title = "SQL Explorer";
 	final private String manualUrl = "http://dev.mysql.com/doc/#manual";
 	final private String[] excludeDbs = { "mysql", "information_schema",
@@ -103,6 +104,14 @@ public class UI extends JFrame {
 				dispose();
 			}
 		});
+		
+		window = new JMenu("Window");
+		menu.add(window);
+		
+		preferences = new JMenuItem("Preferences");
+		window.add(preferences);
+		
+		preferences.addActionListener(new Prefs(this));
 
 		help = new JMenu("Help");
 		menu.add(help);
