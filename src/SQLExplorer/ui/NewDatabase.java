@@ -93,7 +93,7 @@ public class NewDatabase extends JDialog {
 
 	private Action add = new AbstractAction() {
 
-		private static final long serialVersionUID = 5692304708975454149L;
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
