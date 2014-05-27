@@ -38,7 +38,7 @@ import SQLExplorer.ui.tool.Prefs;
 
 public class UI extends JFrame {
 
-	private static final long serialVersionUID = 6371680321859454577L;
+	private static final long serialVersionUID = 1L;
 	public Statement statement = null;
 	public JComboBox<Object> database;
 	protected JPanel header, footer;
@@ -49,7 +49,8 @@ public class UI extends JFrame {
 	private JButton drop, backup, export;
 	private JMenuBar menu;
 	private JMenu server, window, help;
-	private JMenuItem newDatabase, info, diconnect, contents, about, preferences;
+	private JMenuItem newDatabase, info, disconnect, contents, about,
+			preferences;
 	final private static String title = "SQL Explorer";
 	final private String manualUrl = "http://dev.mysql.com/doc/#manual";
 	final private String[] excludeDbs = { "mysql", "information_schema",
@@ -76,6 +77,8 @@ public class UI extends JFrame {
 		menu.add(server);
 
 		newDatabase = new JMenuItem("New Database");
+		newDatabase.setIcon(new ImageIcon(getClass().getResource(
+				"/resources/icons/database_add.png")));
 		newDatabase.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -85,32 +88,38 @@ public class UI extends JFrame {
 		server.add(newDatabase);
 
 		info = new JMenuItem("Database Server");
+		info.setIcon(new ImageIcon(getClass().getResource(
+				"/resources/icons/database.png")));
 		info.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				// new NewDatabase(UI.this);
+
 			}
 		});
 		server.add(info);
 
 		server.addSeparator();
 
-		diconnect = new JMenuItem("Diconnect");
-		server.add(diconnect);
+		disconnect = new JMenuItem("Disconnect");
+		disconnect.setIcon(new ImageIcon(getClass().getResource(
+				"/resources/icons/disconnect.png")));
+		server.add(disconnect);
 
-		diconnect.addActionListener(new ActionListener() {
+		disconnect.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				dispose();
 			}
 		});
-		
+
 		window = new JMenu("Window");
 		menu.add(window);
-		
+
 		preferences = new JMenuItem("Preferences");
+		preferences.setIcon(new ImageIcon(getClass().getResource(
+				"/resources/icons/database_gear.png")));
 		window.add(preferences);
-		
+
 		preferences.addActionListener(new Prefs(this));
 
 		help = new JMenu("Help");
