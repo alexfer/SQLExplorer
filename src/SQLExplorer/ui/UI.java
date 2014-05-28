@@ -11,6 +11,7 @@ import java.net.URL;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.*;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -39,6 +40,7 @@ import SQLExplorer.ui.tool.Prefs;
 public class UI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	public Logger logger = Logger.getLogger(UI.class.getName());
 	public Statement statement = null;
 	public JComboBox<Object> database;
 	protected JPanel header, footer;

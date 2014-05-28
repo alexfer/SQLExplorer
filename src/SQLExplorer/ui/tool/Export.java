@@ -153,7 +153,7 @@ public class Export extends Tool implements ActionListener {
 	};
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(ActionEvent event) {		
 		renderDialog();
 	}
 }
