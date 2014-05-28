@@ -127,7 +127,7 @@ public class Tool extends Thread {
 	}
 
 	public void run() {
-		// TODO Change it block
+		// TODO Change this block
 		final int state = getProc();
 		try {
 			if (imp != null) {
