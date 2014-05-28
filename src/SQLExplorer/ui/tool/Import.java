@@ -20,15 +20,14 @@ import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.UI;
 
-public class Import extends Tool implements ActionListener {
+public class Import implements ActionListener {
 
-	private UI ui;
-	private JDialog dialog;
+	public UI ui;
+	public JDialog dialog;
 	public JTextField path, file;
 	public JCheckBox force;
 
 	public Import(UI ui) {
-		super(ui);
 		this.ui = ui;
 	}
 
@@ -104,40 +103,31 @@ public class Import extends Tool implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dialog.setEnabled(false);
-			try {
-				int completed = restore(Import.this);
-				if (completed == 0) {										
-					try {
-						// Rendering new a list of databases
-						List<Object> dbs = new Query(ui).listDatabases();
-						DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<Object>(
-								dbs.toArray());
-						ui.database.setModel(model);
-						ui.database.setSelectedIndex(0);
-					} catch (UISQLException ex) {
-						JOptionPane
-								.showMessageDialog(ui, ex.getMessage()
-										.toString(), "Error",
-										JOptionPane.ERROR_MESSAGE);
-					}
-					JOptionPane
-							.showMessageDialog(
-									ui,
-									"Database export operation has been finished successfully.",
-									"Backup Completed",
-									JOptionPane.INFORMATION_MESSAGE);
-				}
-			} catch (UISQLException ex) {				
-				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-			dialog.dispose();
+			Tool tool = new Tool(Import.this);
+			tool.start();
 		}
 	};
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		renderDialog();
+	}
+
+	public void finished() {
+		try {
+			// Rendering new a list of databases
+			List<Object> dbs = new Query(ui).listDatabases();
+			DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<Object>(
+					dbs.toArray());
+			ui.database.setModel(model);
+			ui.database.setSelectedIndex(0);
+		} catch (UISQLException ex) {
+			JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+		JOptionPane.showMessageDialog(ui,
+				"Database export operation has been finished successfully.",
+				"Backup Completed", JOptionPane.INFORMATION_MESSAGE);
+		ui.progressBar.setVisible(false);
 	}
 }

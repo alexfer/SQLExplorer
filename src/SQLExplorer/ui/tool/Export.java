@@ -16,18 +16,16 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import SQLExplorer.db.Tool;
-import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.UI;
 
-public class Export extends Tool implements ActionListener {
+public class Export implements ActionListener {
 
-	private UI ui;
-	private JDialog dialog;
+	public UI ui;
+	public JDialog dialog;
 	public JTextField path, file;
 	public JCheckBox quick, dropDb, force;
 
 	public Export(UI ui) {
-		super(ui);
 		this.ui = ui;
 	}
 
@@ -111,6 +109,8 @@ public class Export extends Tool implements ActionListener {
 		dialog.add(cancel);
 		cancel.addActionListener(close);
 
+		ui.progressBar.setValue(0);
+
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setResizable(false);
 		dialog.setSize(400, 180);
@@ -124,6 +124,7 @@ public class Export extends Tool implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			ui.progressBar.setVisible(false);
 			dialog.dispose();
 		}
 	};
@@ -134,26 +135,21 @@ public class Export extends Tool implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			try {
-				int completed = export(Export.this);
-				if (completed == 0) {
-					JOptionPane
-							.showMessageDialog(
-									ui,
-									"Database import operation has been finished successfully.",
-									"Backup Completed",
-									JOptionPane.INFORMATION_MESSAGE);
-				}
-			} catch (UISQLException ex) {
-				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-			dialog.dispose();
+			Tool tool = new Tool(Export.this);
+			tool.start();
 		}
 	};
 
 	@Override
-	public void actionPerformed(ActionEvent event) {		
+	public void actionPerformed(ActionEvent event) {
+		ui.progressBar.setVisible(true);
 		renderDialog();
+	}
+
+	public void finished() {
+		JOptionPane.showMessageDialog(ui,
+				"Database import operation has been finished successfully.",
+				"Restore Completed", JOptionPane.INFORMATION_MESSAGE);
+		ui.progressBar.setVisible(false);
 	}
 }

@@ -26,6 +26,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -40,10 +41,11 @@ import SQLExplorer.ui.tool.Prefs;
 public class UI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	public Logger logger = Logger.getLogger(UI.class.getName());
+	public static Logger logger = Logger.getLogger(UI.class.getName());
 	public Statement statement = null;
 	public JComboBox<Object> database;
 	protected JPanel header, footer;
+	public JProgressBar progressBar;
 	protected static JComboBox<Object> handle;
 	public JPanel layout;
 	private JTable table;
@@ -154,6 +156,13 @@ public class UI extends JFrame {
 
 		setJMenuBar(menu);
 	}
+	
+	public JProgressBar progressBar() {
+		final JProgressBar progressBar = new JProgressBar(0, 100);
+		progressBar.setValue(0);
+		progressBar.setStringPainted(true);		
+		return progressBar;
+	}
 
 	private void footer() {
 		footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -166,8 +175,11 @@ public class UI extends JFrame {
 		if (in_array(excludeDbs, database.getSelectedItem().toString())) {
 			drop.setEnabled(false);
 			handle.setEnabled(false);
-		}
+		}		
 		handle.addActionListener(actionTable);
+		progressBar = progressBar();
+		footer.add(progressBar);
+		progressBar.setVisible(false);
 		add(footer, BorderLayout.SOUTH);
 		footer.setBackground(Color.lightGray);
 	}
