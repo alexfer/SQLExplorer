@@ -16,8 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import SQLExplorer.db.Query;
-import SQLExplorer.db.Tool;
 import SQLExplorer.db.UISQLException;
+import SQLExplorer.db.tool.Restore;
 import SQLExplorer.ui.UI;
 
 public class Import implements ActionListener {
@@ -103,8 +103,8 @@ public class Import implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Tool tool = new Tool(Import.this);
-			tool.start();
+			Restore restore = new Restore(Import.this);
+			restore.start();
 		}
 	};
 
@@ -128,6 +128,6 @@ public class Import implements ActionListener {
 		JOptionPane.showMessageDialog(ui,
 				"Database export operation has been finished successfully.",
 				"Backup Completed", JOptionPane.INFORMATION_MESSAGE);
-		ui.progressBar.setVisible(false);
+		ui.progress.setVisible(false);
 	}
 }

@@ -2,6 +2,11 @@ package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.TimeZone;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -15,7 +20,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import SQLExplorer.db.Tool;
+import SQLExplorer.db.tool.Backup;
+import SQLExplorer.db.tool.ToolException;
 import SQLExplorer.ui.UI;
 
 public class Export implements ActionListener {
@@ -24,6 +30,9 @@ public class Export implements ActionListener {
 	public JDialog dialog;
 	public JTextField path, file;
 	public JCheckBox quick, dropDb, force;
+	public static boolean finished = false;
+	private String title;
+	public ArrayList<String> tblSelected = new ArrayList<String>();
 
 	public Export(UI ui) {
 		this.ui = ui;
@@ -109,8 +118,6 @@ public class Export implements ActionListener {
 		dialog.add(cancel);
 		cancel.addActionListener(close);
 
-		ui.progressBar.setValue(0);
-
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setResizable(false);
 		dialog.setSize(400, 180);
@@ -124,7 +131,7 @@ public class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			ui.progressBar.setVisible(false);
+			ui.progress.setVisible(false);
 			dialog.dispose();
 		}
 	};
@@ -135,21 +142,46 @@ public class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Tool tool = new Tool(Export.this);
-			tool.start();
+
+			for (int i = 0; i < ui.table.getModel().getRowCount(); i++) {
+				if ((Boolean) ui.table.getValueAt(i, 6)) {
+					tblSelected.add(ui.table.getValueAt(i, 0).toString());
+				}
+			}
+			
+			ui.setEnabled(false);
+			title = ui.getTitle();
+			ui.setTitle(UI.title + " - Backup is running...");
+
+			Backup backup = new Backup(Export.this, System.currentTimeMillis());
+
+			try {
+				final long[] finished = backup.export();
+				if (finished[0] == 0) {
+					finished(finished[1]);
+				}
+			} catch (ToolException ex) {
+				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			ui.setEnabled(true);
+			ui.setTitle(title);
 		}
 	};
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		ui.progressBar.setVisible(true);
 		renderDialog();
 	}
 
-	public void finished() {
+	private void finished(long elapsed) {
+		Date date = new Date(elapsed);
+		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		ui.setTitle(UI.title + " - Backup has been completed.");
 		JOptionPane.showMessageDialog(ui,
-				"Database import operation has been finished successfully.",
-				"Restore Completed", JOptionPane.INFORMATION_MESSAGE);
-		ui.progressBar.setVisible(false);
+				"Backup has been completed successfully.\nSpent time: "
+						+ formatter.format(date), "Export Completed",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

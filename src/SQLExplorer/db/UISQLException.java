@@ -8,7 +8,7 @@ public class UISQLException extends SQLException {
 	
 	private String message;
 	
-	UISQLException(String message) {
+	public UISQLException(String message) {
 		this.message = message;
 	}
 	

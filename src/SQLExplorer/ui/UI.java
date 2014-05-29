@@ -26,7 +26,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -44,18 +43,18 @@ public class UI extends JFrame {
 	public static Logger logger = Logger.getLogger(UI.class.getName());
 	public Statement statement = null;
 	public JComboBox<Object> database;
-	protected JPanel header, footer;
-	public JProgressBar progressBar;
+	public JPanel header, footer;
+	public JLabel progress;
 	protected static JComboBox<Object> handle;
 	public JPanel layout;
-	private JTable table;
+	public JTable table;
 	public JScrollPane pane;
-	private JButton drop, backup, export;
+	private JButton drop, imp, export;
 	private JMenuBar menu;
 	private JMenu server, window, help;
 	private JMenuItem newDatabase, info, disconnect, contents, about,
 			preferences;
-	final private static String title = "SQL Explorer";
+	public static String title = "SQL Explorer";
 	final private String manualUrl = "http://dev.mysql.com/doc/#manual";
 	final private String[] excludeDbs = { "mysql", "information_schema",
 			"performance_schema" };
@@ -156,13 +155,6 @@ public class UI extends JFrame {
 
 		setJMenuBar(menu);
 	}
-	
-	public JProgressBar progressBar() {
-		final JProgressBar progressBar = new JProgressBar(0, 100);
-		progressBar.setValue(0);
-		progressBar.setStringPainted(true);		
-		return progressBar;
-	}
 
 	private void footer() {
 		footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -177,9 +169,6 @@ public class UI extends JFrame {
 			handle.setEnabled(false);
 		}		
 		handle.addActionListener(actionTable);
-		progressBar = progressBar();
-		footer.add(progressBar);
-		progressBar.setVisible(false);
 		add(footer, BorderLayout.SOUTH);
 		footer.setBackground(Color.lightGray);
 	}
@@ -215,10 +204,10 @@ public class UI extends JFrame {
 		export.addActionListener(new Export(this));
 
 		// Import database
-		backup = new JButton("Import", new ImageIcon(getClass().getResource(
+		imp = new JButton("Import", new ImageIcon(getClass().getResource(
 				"/resources/icons/table_row_delete.png")));
-		header.add(backup);
-		backup.addActionListener(new Import(this));
+		header.add(imp);
+		imp.addActionListener(new Import(this));
 
 		// Add header panel to layout
 		add(header, BorderLayout.NORTH);
