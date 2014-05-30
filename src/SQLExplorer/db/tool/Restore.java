@@ -11,8 +11,7 @@ import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Import;
 
 public class Restore extends Thread {
-	private Preferences prefs;
-	private Task task;
+	private Preferences prefs;	
 	private Import imp = null;
 	private int proc = 0;
 
@@ -28,8 +27,7 @@ public class Restore extends Thread {
 	public void restore() throws UISQLException {
 		String name = imp.ui.database.getSelectedItem().toString(), path = imp.path
 				.getText();
-		task = new Task(imp.ui);
-		task.start();
+
 		String[] args = { prefs.get("mysql", ""), "--force", name,
 				String.format("--user=%s", imp.ui.user),
 				String.format("--password=%s", imp.ui.password), "-e",

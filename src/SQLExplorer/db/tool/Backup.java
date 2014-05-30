@@ -21,7 +21,7 @@ public class Backup {
 
 	public Backup(Export exp, long start) {
 		prefs = Preferences.userNodeForPackage(UI.class);
-		this.exp = exp;		
+		this.exp = exp;
 		this.start = start;
 	}
 
@@ -34,9 +34,9 @@ public class Backup {
 		}
 
 		String[] args = { prefs.get("mysqldump", ""), "--force", "--quick",
-				String.format("--user=%s", exp.ui.user),
+				"--add-drop-database", String.format("--user=%s", exp.ui.user),
 				String.format("--password=%s", exp.ui.password), "--databases",
-				name, "--add-drop-database" };
+				name };
 
 		if (!exp.quick.isSelected()) {
 			args = Helper.removeArgument(args, "--quick");
@@ -50,10 +50,15 @@ public class Backup {
 			args = Helper.removeArgument(args, "--add-drop-database");
 			args = Helper.removeArgument(args, "--databases");
 		}
+
+		if (exp.tblSelected.size() > 0) {
+			for (String table : exp.tblSelected) {
+				args = Helper.appendArgument(args, table);
+			}
+			args = Helper.removeArgument(args, "--add-drop-database");
+			args = Helper.removeArgument(args, "--databases");
+		}
 		
-		//args = Helper.appendArgument(args, "--ignore-table=table_name");
-		
-		exp.dialog.dispose();
 		try {
 			return new long[] {
 					execute(args,

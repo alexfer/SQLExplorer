@@ -72,7 +72,7 @@ public class Login extends JFrame {
 		lpassword.setBounds(10, 100, 80, 25);
 		panel.add(lpassword);
 
-		password = new JPasswordField("7212104", 20);
+		password = new JPasswordField(20);
 		password.setBounds(100, 100, 230, 25);
 		panel.add(password);
 
@@ -83,7 +83,7 @@ public class Login extends JFrame {
 		panel.add(conn);
 	}
 
-	private Action action = new AbstractAction() {
+	final private Action action = new AbstractAction() {
 
 		private static final long serialVersionUID = 1L;
 

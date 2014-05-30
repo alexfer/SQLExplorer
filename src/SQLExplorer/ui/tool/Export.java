@@ -27,72 +27,71 @@ import SQLExplorer.ui.UI;
 public class Export implements ActionListener {
 
 	public UI ui;
-	public JDialog dialog;
+	private JDialog d;
 	public JTextField path, file;
 	public JCheckBox quick, dropDb, force;
-	public static boolean finished = false;
 	private String title;
 	public ArrayList<String> tblSelected = new ArrayList<String>();
 
-	public Export(UI ui) {
+	public Export(UI ui) {		
 		this.ui = ui;
 	}
 
 	private void renderDialog() {
-		dialog = new JDialog(ui, "Export Options", true);
-		dialog.setLayout(null);
+		d = new JDialog(ui, "Export Options", true);
+		d.setLayout(null);
 
 		final JLabel lforce = new JLabel("Skip Errors");
 		lforce.setBounds(10, 10, 120, 25);
-		dialog.add(lforce);
+		d.add(lforce);
 
 		force = new JCheckBox();
 		force.setBounds(80, 12, 20, 20);
 		force.setSelected(true);
-		dialog.add(force);
+		d.add(force);
 
 		final JLabel ldropdb = new JLabel("Drop Database");
 		ldropdb.setBounds(135, 10, 120, 25);
-		dialog.add(ldropdb);
+		d.add(ldropdb);
 
 		dropDb = new JCheckBox();
 		dropDb.setBounds(230, 12, 20, 20);
 		dropDb.setSelected(true);
-		dialog.add(dropDb);
+		d.add(dropDb);
 
 		final JLabel lquick = new JLabel("Disable Cache");
 		lquick.setBounds(280, 10, 120, 25);
-		dialog.add(lquick);
+		d.add(lquick);
 
 		quick = new JCheckBox();
 		quick.setBounds(370, 12, 20, 20);
 		quick.setSelected(true);
-		dialog.add(quick);
+		d.add(quick);
 
 		final JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
 		sep.setBounds(10, 35, 380, 5);
-		dialog.add(sep);
+		d.add(sep);
 
 		final JLabel ldir = new JLabel("Destination Folder");
 		ldir.setBounds(10, 45, 120, 25);
-		dialog.add(ldir);
+		d.add(ldir);
 
 		path = new JTextField(System.getProperty("user.home"));
 		path.setBounds(130, 45, 180, 25);
-		dialog.add(path);
+		d.add(path);
 
 		final JButton dir = new JButton("Choose");
 		dir.setBounds(310, 45, 80, 25);
-		dialog.add(dir);
+		d.add(dir);
 
 		final JLabel lfile = new JLabel("File Name");
 		lfile.setBounds(10, 75, 120, 25);
-		dialog.add(lfile);
+		d.add(lfile);
 
 		file = new JTextField(String.format("%s.sql", ui.database
 				.getSelectedItem().toString()));
 		file.setBounds(130, 75, 260, 25);
-		dialog.add(file);
+		d.add(file);
 
 		dir.addActionListener(new ActionListener() {
 			@Override
@@ -110,19 +109,19 @@ public class Export implements ActionListener {
 
 		final JButton create = new JButton("Export");
 		create.setBounds(120, 110, 90, 25);
-		dialog.add(create);
+		d.add(create);
 		create.addActionListener(run);
 
 		final JButton cancel = new JButton("Cancel");
 		cancel.setBounds(210, 110, 90, 25);
-		dialog.add(cancel);
+		d.add(cancel);
 		cancel.addActionListener(close);
 
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setResizable(false);
-		dialog.setSize(400, 180);
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		d.setResizable(false);
+		d.setSize(400, 180);
+		d.setLocationRelativeTo(null);
+		d.setVisible(true);
 	}
 
 	private Action close = new AbstractAction() {
@@ -131,8 +130,7 @@ public class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			ui.progress.setVisible(false);
-			dialog.dispose();
+			d.dispose();
 		}
 	};
 
@@ -142,13 +140,14 @@ public class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			d.dispose();
 
 			for (int i = 0; i < ui.table.getModel().getRowCount(); i++) {
 				if ((Boolean) ui.table.getValueAt(i, 6)) {
 					tblSelected.add(ui.table.getValueAt(i, 0).toString());
 				}
 			}
-			
+
 			ui.setEnabled(false);
 			title = ui.getTitle();
 			ui.setTitle(UI.title + " - Backup is running...");
@@ -184,4 +183,5 @@ public class Export implements ActionListener {
 						+ formatter.format(date), "Export Completed",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+
 }

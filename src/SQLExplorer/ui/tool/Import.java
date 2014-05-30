@@ -127,7 +127,6 @@ public class Import implements ActionListener {
 		}
 		JOptionPane.showMessageDialog(ui,
 				"Database export operation has been finished successfully.",
-				"Backup Completed", JOptionPane.INFORMATION_MESSAGE);
-		ui.progress.setVisible(false);
+				"Backup Completed", JOptionPane.INFORMATION_MESSAGE);		
 	}
 }

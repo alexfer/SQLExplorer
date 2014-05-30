@@ -43,8 +43,7 @@ public class UI extends JFrame {
 	public static Logger logger = Logger.getLogger(UI.class.getName());
 	public Statement statement = null;
 	public JComboBox<Object> database;
-	public JPanel header, footer;
-	public JLabel progress;
+	public JPanel header, footer;	
 	protected static JComboBox<Object> handle;
 	public JPanel layout;
 	public JTable table;
