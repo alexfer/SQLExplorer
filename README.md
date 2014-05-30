@@ -5,7 +5,7 @@ Usage
 -----
 
 ```java
-$java -jar SQLExplorer.jar
+$java -jar run.jar
 ```
 
 License
