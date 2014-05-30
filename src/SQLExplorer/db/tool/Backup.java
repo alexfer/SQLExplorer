@@ -11,8 +11,7 @@ import java.util.prefs.Preferences;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Export;
 
-public class Backup {
-
+public class Backup implements Runnable {
 	private Preferences prefs;
 	private Export exp = null;
 	private int proc = 0;
@@ -24,7 +23,7 @@ public class Backup {
 		this.start = start;
 	}
 
-	public long[] start() throws ToolException {
+	public long[] handle() throws ToolException {
 		String name = exp.ui.database.getSelectedItem().toString(), file = exp.file
 				.getText();
 
@@ -45,7 +44,7 @@ public class Backup {
 			args = Helper.removeArgument(args, "--force");
 		}
 
-		if (!exp.dropDb.isSelected()) {
+		if (!exp.drop.isSelected()) {
 			args = Helper.removeArgument(args, "--add-drop-database");
 			args = Helper.removeArgument(args, "--databases");
 		}
@@ -57,7 +56,7 @@ public class Backup {
 			args = Helper.removeArgument(args, "--add-drop-database");
 			args = Helper.removeArgument(args, "--databases");
 		}
-		
+
 		try {
 			return new long[] {
 					execute(args,
@@ -69,6 +68,7 @@ public class Backup {
 	}
 
 	private int execute(String[] cmd, String file) throws ToolException {
+
 		try {
 			Process exec = Runtime.getRuntime().exec(cmd);
 			try {
@@ -107,4 +107,19 @@ public class Backup {
 		}
 		return proc;
 	}
+
+	@Override
+	public void run() {
+		try {
+			final long[] finished = handle();
+			if (finished[0] == 0) {
+				exp.finished(finished[1]);
+			}
+		} catch (ToolException e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+	}
+
 }

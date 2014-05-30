@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.db.tool.Restore;
-import SQLExplorer.db.tool.ToolException;
 import SQLExplorer.ui.UI;
 
 public class Import implements ActionListener {
@@ -31,7 +30,6 @@ public class Import implements ActionListener {
 	private JDialog d;
 	public JTextField path, file;
 	public JCheckBox force;
-	private String title;
 
 	public Import(UI ui) {
 		this.ui = ui;
@@ -110,22 +108,10 @@ public class Import implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			d.dispose();
-			
-			title = ui.getTitle();
-			ui.setTitle(UI.title + " - Restore is running...");
-			
-			Restore restore = new Restore(Import.this,
+			ui.progress.setVisible(true);
+			Restore runner = new Restore(Import.this,
 					System.currentTimeMillis());
-			try {
-				final long[] finished = restore.start();
-				if (finished[0] == 0) {
-					finished(finished[1]);
-				}
-			} catch (ToolException ex) {
-				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-			ui.setTitle(title);
+			new Thread(runner).start();
 		}
 	};
 
@@ -134,7 +120,7 @@ public class Import implements ActionListener {
 		renderDialog();
 	}
 
-	private void finished(long elapsed) {
+	public void finished(long elapsed) {
 		try {
 			// Rendering new a list of databases
 			List<Object> dbs = new Query(ui).listDatabases();
@@ -154,5 +140,6 @@ public class Import implements ActionListener {
 				"Database restore has been completed successfully.\nSpent time: "
 						+ formatter.format(date), "Import Completed",
 				JOptionPane.INFORMATION_MESSAGE);
+		ui.progress.setVisible(false);
 	}
 }

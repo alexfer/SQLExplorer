@@ -37,7 +37,7 @@ public class Login extends JFrame {
 		placeComponents(panel);
 		conn.getActionMap().put("Enter", action);
 		conn.addActionListener(action);
-		setLocationRelativeTo(null);		
+		setLocationRelativeTo(null);
 	}
 
 	private void placeComponents(JPanel panel) {

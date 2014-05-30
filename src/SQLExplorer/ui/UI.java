@@ -43,16 +43,17 @@ public class UI extends JFrame {
 	public static Logger logger = Logger.getLogger(UI.class.getName());
 	public Statement statement = null;
 	public JComboBox<Object> database;
-	public JPanel header, footer;	
+	public JPanel header, footer;
 	protected static JComboBox<Object> handle;
 	public JPanel layout;
 	public JTable table;
 	public JScrollPane pane;
-	private JButton drop, imp, export;
+	public JButton drop, imp, export;
 	private JMenuBar menu;
 	private JMenu server, window, help;
 	private JMenuItem newDatabase, info, disconnect, contents, about,
 			preferences;
+	public JLabel progress;
 	public static String title = "SQL Explorer";
 	final private String manualUrl = "http://dev.mysql.com/doc/#manual";
 	final private String[] excludeDbs = { "mysql", "information_schema",
@@ -157,16 +158,21 @@ public class UI extends JFrame {
 
 	private void footer() {
 		footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
 		footer.add(new JLabel("", new ImageIcon(getClass().getResource(
 				"/resources/icons/database_go.png")), SwingConstants.LEFT));
 		handle = new JComboBox<Object>(new String[] { "--------", "Check",
 				"Optimize", "Repair", "Empty", "Drop" });
 		footer.add(handle);
 
+		progress = new JLabel("In Progerss");
+		footer.add(progress);
+		progress.setVisible(false);
+
 		if (in_array(excludeDbs, database.getSelectedItem().toString())) {
 			drop.setEnabled(false);
 			handle.setEnabled(false);
-		}		
+		}
 		handle.addActionListener(actionTable);
 		add(footer, BorderLayout.SOUTH);
 		footer.setBackground(Color.lightGray);

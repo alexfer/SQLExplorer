@@ -9,7 +9,7 @@ import java.util.prefs.Preferences;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Import;
 
-public class Restore {
+public class Restore implements Runnable {
 	private Preferences prefs;
 	private Import imp = null;
 	private int proc = 0;
@@ -21,7 +21,7 @@ public class Restore {
 		this.start = start;
 	}
 
-	public long[] start() throws ToolException {
+	private long[] handle() throws ToolException {
 		String name = imp.ui.database.getSelectedItem().toString(), path = imp.path
 				.getText();
 
@@ -35,7 +35,8 @@ public class Restore {
 		}
 
 		try {
-			return new long[] { execute(args), System.currentTimeMillis() - start };
+			return new long[] { execute(args),
+					System.currentTimeMillis() - start };
 		} catch (ToolException e) {
 			throw new ToolException(e.getMessage());
 		}
@@ -74,5 +75,20 @@ public class Restore {
 			throw new ToolException(e.getMessage());
 		}
 		return proc;
+	}
+
+	@Override
+	public void run() {
+		try {
+			final long[] finished = handle();
+			if (finished[0] == 0) {
+				imp.finished(finished[1]);
+			}
+		} catch (ToolException e) {
+			e.printStackTrace();
+		} finally {
+
+		}
+
 	}
 }

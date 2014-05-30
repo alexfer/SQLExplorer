@@ -21,7 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import SQLExplorer.db.tool.Backup;
-import SQLExplorer.db.tool.ToolException;
 import SQLExplorer.ui.UI;
 
 public class Export implements ActionListener {
@@ -29,11 +28,10 @@ public class Export implements ActionListener {
 	public UI ui;
 	private JDialog d;
 	public JTextField path, file;
-	public JCheckBox quick, dropDb, force;
-	private String title;
+	public JCheckBox quick, drop, force;
 	public ArrayList<String> tblSelected = new ArrayList<String>();
 
-	public Export(UI ui) {		
+	public Export(UI ui) {
 		this.ui = ui;
 	}
 
@@ -54,10 +52,10 @@ public class Export implements ActionListener {
 		ldropdb.setBounds(135, 10, 120, 25);
 		d.add(ldropdb);
 
-		dropDb = new JCheckBox();
-		dropDb.setBounds(230, 12, 20, 20);
-		dropDb.setSelected(true);
-		d.add(dropDb);
+		drop = new JCheckBox();
+		drop.setBounds(230, 12, 20, 20);
+		drop.setSelected(true);
+		d.add(drop);
 
 		final JLabel lquick = new JLabel("Disable Cache");
 		lquick.setBounds(280, 10, 120, 25);
@@ -141,30 +139,15 @@ public class Export implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			d.dispose();
-
+			ui.progress.setVisible(true);
 			for (int i = 0; i < ui.table.getModel().getRowCount(); i++) {
 				if ((Boolean) ui.table.getValueAt(i, 6)) {
 					tblSelected.add(ui.table.getValueAt(i, 0).toString());
 				}
 			}
 
-			ui.setEnabled(false);
-			title = ui.getTitle();
-			ui.setTitle(UI.title + " - Backup is running...");
-
-			Backup backup = new Backup(Export.this, System.currentTimeMillis());
-
-			try {
-				final long[] finished = backup.start();
-				if (finished[0] == 0) {
-					finished(finished[1]);
-				}
-			} catch (ToolException ex) {
-				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-			ui.setEnabled(true);
-			ui.setTitle(title);
+			Backup runner = new Backup(Export.this, System.currentTimeMillis());
+			new Thread(runner).start();
 		}
 	};
 
@@ -173,7 +156,7 @@ public class Export implements ActionListener {
 		renderDialog();
 	}
 
-	private void finished(long elapsed) {
+	public void finished(long elapsed) {
 		Date date = new Date(elapsed);
 		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -182,6 +165,7 @@ public class Export implements ActionListener {
 				"Backup has been completed successfully.\nSpent time: "
 						+ formatter.format(date), "Export Completed",
 				JOptionPane.INFORMATION_MESSAGE);
+		ui.progress.setVisible(false);
 	}
 
 }
