@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.prefs.Preferences;
 
 import SQLExplorer.ui.UI;
@@ -25,7 +24,7 @@ public class Backup {
 		this.start = start;
 	}
 
-	public long[] export() throws ToolException {
+	public long[] start() throws ToolException {
 		String name = exp.ui.database.getSelectedItem().toString(), file = exp.file
 				.getText();
 

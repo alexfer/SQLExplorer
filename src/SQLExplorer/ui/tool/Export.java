@@ -155,7 +155,7 @@ public class Export implements ActionListener {
 			Backup backup = new Backup(Export.this, System.currentTimeMillis());
 
 			try {
-				final long[] finished = backup.export();
+				final long[] finished = backup.start();
 				if (finished[0] == 0) {
 					finished(finished[1]);
 				}

@@ -2,7 +2,11 @@ package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -18,43 +22,45 @@ import javax.swing.JTextField;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.db.tool.Restore;
+import SQLExplorer.db.tool.ToolException;
 import SQLExplorer.ui.UI;
 
 public class Import implements ActionListener {
 
 	public UI ui;
-	public JDialog dialog;
+	private JDialog d;
 	public JTextField path, file;
 	public JCheckBox force;
+	private String title;
 
 	public Import(UI ui) {
 		this.ui = ui;
 	}
 
 	private void renderDialog() {
-		dialog = new JDialog(ui, "Import Options", true);
-		dialog.setLayout(null);
+		d = new JDialog(ui, "Import Options", true);
+		d.setLayout(null);
 
 		final JLabel lforce = new JLabel("Skip Errors");
 		lforce.setBounds(10, 10, 120, 25);
-		dialog.add(lforce);
+		d.add(lforce);
 
 		force = new JCheckBox();
 		force.setBounds(95, 12, 20, 20);
 		force.setSelected(true);
-		dialog.add(force);
+		d.add(force);
 
 		final JLabel lfile = new JLabel("File to Import");
 		lfile.setBounds(10, 40, 120, 25);
-		dialog.add(lfile);
+		d.add(lfile);
 
 		path = new JTextField(System.getProperty("user.home"));
 		path.setBounds(95, 40, 215, 25);
-		dialog.add(path);
+		d.add(path);
 
 		final JButton choose = new JButton("Choose");
 		choose.setBounds(310, 40, 80, 25);
-		dialog.add(choose);
+		d.add(choose);
 
 		choose.addActionListener(new ActionListener() {
 			@Override
@@ -72,19 +78,19 @@ public class Import implements ActionListener {
 
 		final JButton create = new JButton("Import");
 		create.setBounds(120, 75, 90, 25);
-		dialog.add(create);
+		d.add(create);
 		create.addActionListener(run);
 
 		final JButton cancel = new JButton("Cancel");
 		cancel.setBounds(210, 75, 90, 25);
-		dialog.add(cancel);
+		d.add(cancel);
 		cancel.addActionListener(close);
 
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setResizable(false);
-		dialog.setSize(400, 145);
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		d.setResizable(false);
+		d.setSize(400, 145);
+		d.setLocationRelativeTo(null);
+		d.setVisible(true);
 	}
 
 	private Action close = new AbstractAction() {
@@ -93,7 +99,7 @@ public class Import implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dialog.dispose();
+			d.dispose();
 		}
 	};
 
@@ -103,8 +109,23 @@ public class Import implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Restore restore = new Restore(Import.this);
-			restore.start();
+			d.dispose();
+			
+			title = ui.getTitle();
+			ui.setTitle(UI.title + " - Restore is running...");
+			
+			Restore restore = new Restore(Import.this,
+					System.currentTimeMillis());
+			try {
+				final long[] finished = restore.start();
+				if (finished[0] == 0) {
+					finished(finished[1]);
+				}
+			} catch (ToolException ex) {
+				JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			ui.setTitle(title);
 		}
 	};
 
@@ -113,7 +134,7 @@ public class Import implements ActionListener {
 		renderDialog();
 	}
 
-	public void finished() {
+	private void finished(long elapsed) {
 		try {
 			// Rendering new a list of databases
 			List<Object> dbs = new Query(ui).listDatabases();
@@ -125,8 +146,13 @@ public class Import implements ActionListener {
 			JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
+		Date date = new Date(elapsed);
+		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		ui.setTitle(UI.title + " - Restore has been completed.");
 		JOptionPane.showMessageDialog(ui,
-				"Database export operation has been finished successfully.",
-				"Backup Completed", JOptionPane.INFORMATION_MESSAGE);		
+				"Database restore has been completed successfully.\nSpent time: "
+						+ formatter.format(date), "Import Completed",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

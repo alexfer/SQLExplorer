@@ -6,25 +6,22 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
-import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Import;
 
-public class Restore extends Thread {
-	private Preferences prefs;	
+public class Restore {
+	private Preferences prefs;
 	private Import imp = null;
 	private int proc = 0;
+	private long start;
 
-	Restore() {
-		super();
-	}
-
-	public Restore(Import imp) {
+	public Restore(Import imp, long start) {
 		prefs = Preferences.userNodeForPackage(UI.class);
 		this.imp = imp;
+		this.start = start;
 	}
-	
-	public void restore() throws UISQLException {
+
+	public long[] start() throws ToolException {
 		String name = imp.ui.database.getSelectedItem().toString(), path = imp.path
 				.getText();
 
@@ -36,41 +33,15 @@ public class Restore extends Thread {
 		if (!imp.force.isSelected()) {
 			args = Helper.removeArgument(args, "--force");
 		}
-		imp.dialog.dispose();
+
 		try {
-			execute(args);
-		} catch (UISQLException e) {
-			throw new UISQLException(e.getMessage());
+			return new long[] { execute(args), System.currentTimeMillis() - start };
+		} catch (ToolException e) {
+			throw new ToolException(e.getMessage());
 		}
 	}
 
-	public void run() {
-		// TODO Change this block
-		final int state = getProc();
-		try {
-			restore();
-			if(state == 2) {
-				imp.finished();
-			}
-			if (state == 0) {
-				imp.finished();
-			}
-		} catch (UISQLException ex) {
-			try {
-				throw new UISQLException(ex.getMessage());
-			} catch (UISQLException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			UI.logger.info(e.getMessage());
-		}
-	}
-	
-	private synchronized void execute(String[] cmd)
-			throws UISQLException {
+	private int execute(String[] cmd) throws ToolException {
 
 		try {
 			Process exec = Runtime.getRuntime().exec(cmd);
@@ -91,20 +62,17 @@ public class Restore extends Thread {
 
 				proc = exec.waitFor();
 				if (errors.size() > 0) {
-					throw new UISQLException(imp.ui.join(errors, "\n"));
+					throw new ToolException(imp.ui.join(errors, "\n"));
 				}
 
 			} catch (InterruptedException e) {
-				throw new UISQLException(e.getMessage());
+				throw new ToolException(e.getMessage());
 			} finally {
 				exec.destroy();
 			}
 		} catch (IOException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ToolException(e.getMessage());
 		}
-	}
-
-	public int getProc() {
-		return this.proc;
+		return proc;
 	}
 }
