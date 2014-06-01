@@ -19,7 +19,7 @@ public class Handler {
 			if (action.equals("empty")) {
 				for (int i = 0; i < names.size(); i++) {
 					ui.statement.executeUpdate(String.format(
-							"TRUNCATE TABLE %s", names.get(i).toString()));
+							"TRUNCATE TABLE %s", names.get(i).toString()));					
 				}
 			} else if (!action.equals("drop")) {
 				ResultSet result = ui.statement.executeQuery(String.format(
@@ -28,6 +28,7 @@ public class Handler {
 				while (result.next()) {
 
 				}
+				result.close();
 			} else {
 				ui.statement.executeUpdate(String.format(
 						"DROP TABLE IF EXISTS %s", ui.join(names, ",")));

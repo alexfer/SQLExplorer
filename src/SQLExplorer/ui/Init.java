@@ -101,7 +101,8 @@ public class Init extends JFrame {
 			if (statement == null) {
 				password.setText("");
 			} else {
-				dispose();
+				getContentPane().removeAll();
+				dispose();				
 				new UI(statement, username.getText(), password.getText());
 			}
 		}

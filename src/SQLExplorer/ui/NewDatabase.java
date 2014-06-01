@@ -22,9 +22,9 @@ import SQLExplorer.db.UISQLException;
 
 public class NewDatabase extends JDialog {
 
-	private static final long serialVersionUID = 1L;	
+	private static final long serialVersionUID = 1L;
 	private UI ui;
-	private JTextField dbName;	
+	private JTextField dbName;
 	private JComboBox<Object> collation;
 
 	public NewDatabase(final UI ui) {
@@ -50,7 +50,8 @@ public class NewDatabase extends JDialog {
 
 		try {
 			List<Object> charactesr = new Query(ui).getCharactes();
-			collation = new JComboBox<Object>(new DefaultComboBoxModel<Object>(charactesr.toArray()));
+			collation = new JComboBox<Object>(new DefaultComboBoxModel<Object>(
+					charactesr.toArray()));
 		} catch (UISQLException e) {
 			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
@@ -86,7 +87,7 @@ public class NewDatabase extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dispose();
+			close();
 		}
 	};
 
@@ -121,15 +122,20 @@ public class NewDatabase extends JDialog {
 					new Query(ui).addDatabase(name.toString(), collation
 							.getSelectedItem().toString());
 				} catch (UISQLException ex) {
-					JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(ui, ex.getMessage()
+							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				ui.database.addItem(name);
 				ui.database.updateUI();
 				ui.database.setSelectedItem(name);
-				dispose();
+				close();
 			}
 		}
 	};
+
+	private void close() {
+		getContentPane().removeAll();
+		dispose();
+	}
 
 }

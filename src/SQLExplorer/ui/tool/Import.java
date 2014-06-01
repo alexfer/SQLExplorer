@@ -65,7 +65,7 @@ public class Import implements ActionListener {
 		choose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {				
-				JFileChooser chooser = DirChooser.dialog(false);
+				JFileChooser chooser = FileChooser.dialog(false);
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				        "SQL", "sql");
 				    chooser.setFileFilter(filter);
@@ -74,7 +74,7 @@ public class Import implements ActionListener {
 					path.setText(chooser.getSelectedFile().toString());
 				} else if (fch == JFileChooser.CANCEL_OPTION) {
 					chooser.setVisible(false);
-				}				
+				}
 			}
 		});
 
@@ -94,6 +94,12 @@ public class Import implements ActionListener {
 		d.setLocationRelativeTo(null);
 		d.setVisible(true);
 	}
+	
+	private void close() {
+		d.getContentPane().removeAll();
+		d.dispose();
+		d = null;
+	}
 
 	private Action close = new AbstractAction() {
 
@@ -101,7 +107,7 @@ public class Import implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			d.dispose();
+			close();
 		}
 	};
 
@@ -111,7 +117,7 @@ public class Import implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			d.dispose();
+			close();
 			FrameFooter.progress.setVisible(true);
 			Restore runner = new Restore(Import.this,
 					System.currentTimeMillis());
@@ -123,7 +129,7 @@ public class Import implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		renderDialog();
 	}
-
+	
 	public void finished(long elapsed) {
 		try {
 			// Rendering new a list of databases

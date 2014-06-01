@@ -95,12 +95,12 @@ public class Export implements ActionListener {
 		dir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {				
-				JFileChooser chooser = DirChooser.dialog(true);
+				JFileChooser chooser = FileChooser.dialog(true);
 				final int fch = chooser.showOpenDialog(ui);
 				if (fch == JFileChooser.APPROVE_OPTION) {
 					path.setText(chooser.getSelectedFile().toString());
-				} else if (fch == JFileChooser.CANCEL_OPTION) {
-					chooser.setVisible(false);
+				} else if (fch == JFileChooser.CANCEL_OPTION) {					
+					chooser.setVisible(false);					
 				}				
 			}
 		});
@@ -121,6 +121,12 @@ public class Export implements ActionListener {
 		d.setLocationRelativeTo(null);
 		d.setVisible(true);
 	}
+	
+	private void close() {
+		d.getContentPane().removeAll();
+		d.dispose();
+		d = null;
+	}
 
 	private Action close = new AbstractAction() {
 
@@ -128,7 +134,7 @@ public class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			d.dispose();
+			close();
 		}
 	};
 
@@ -138,7 +144,7 @@ public class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			d.dispose();
+			close();
 			FrameFooter.progress.setVisible(true);
 			for (int i = 0; i < ui.table.getModel().getRowCount(); i++) {
 				if ((Boolean) ui.table.getValueAt(i, 6)) {
