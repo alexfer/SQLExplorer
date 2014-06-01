@@ -22,13 +22,12 @@ import SQLExplorer.db.UISQLException;
 
 public class NewDatabase extends JDialog {
 
-	private static final long serialVersionUID = -7982290802187076010L;
-	private JButton create;
+	private static final long serialVersionUID = 1L;	
 	private UI ui;
 	private JTextField dbName;	
 	private JComboBox<Object> collation;
 
-	NewDatabase(final UI ui) {
+	public NewDatabase(final UI ui) {
 		super(ui, "Create Database", true);
 		this.ui = ui;
 		render();
@@ -60,7 +59,7 @@ public class NewDatabase extends JDialog {
 		add(collation);
 		collation.setSelectedItem("utf8");
 
-		create = new JButton("Create");
+		final JButton create = new JButton("Create");
 		create.setBounds(120, 80, 90, 25);
 		create.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");

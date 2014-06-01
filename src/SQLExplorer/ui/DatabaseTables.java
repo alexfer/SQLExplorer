@@ -102,7 +102,7 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 		/*
 		 * TableColumn tc = table.getColumnModel().getColumn(j);
 		 * tc.setHeaderRenderer(new SelectAll(table, j));
-		 */
+		 */		
 		return table;
 	}
 

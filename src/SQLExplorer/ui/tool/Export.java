@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 
 import SQLExplorer.db.tool.Backup;
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.components.FrameFooter;
 
 public class Export implements ActionListener {
 
@@ -93,15 +94,14 @@ public class Export implements ActionListener {
 
 		dir.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent event) {
-				DirChooser.getInstance();
+			public void actionPerformed(ActionEvent event) {				
 				JFileChooser chooser = DirChooser.dialog(true);
-				int jfch = chooser.showOpenDialog(ui);
-				if (jfch == JFileChooser.APPROVE_OPTION) {
+				final int fch = chooser.showOpenDialog(ui);
+				if (fch == JFileChooser.APPROVE_OPTION) {
 					path.setText(chooser.getSelectedFile().toString());
-				} else if (jfch == JFileChooser.CANCEL_OPTION) {
+				} else if (fch == JFileChooser.CANCEL_OPTION) {
 					chooser.setVisible(false);
-				}
+				}				
 			}
 		});
 
@@ -139,7 +139,7 @@ public class Export implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			d.dispose();
-			ui.progress.setVisible(true);
+			FrameFooter.progress.setVisible(true);
 			for (int i = 0; i < ui.table.getModel().getRowCount(); i++) {
 				if ((Boolean) ui.table.getValueAt(i, 6)) {
 					tblSelected.add(ui.table.getValueAt(i, 0).toString());
@@ -159,13 +159,12 @@ public class Export implements ActionListener {
 	public void finished(long elapsed) {
 		Date date = new Date(elapsed);
 		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		ui.setTitle(UI.title + " - Backup has been completed.");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));		
 		JOptionPane.showMessageDialog(ui,
 				"Backup has been completed successfully.\nSpent time: "
 						+ formatter.format(date), "Export Completed",
 				JOptionPane.INFORMATION_MESSAGE);
-		ui.progress.setVisible(false);
+		FrameFooter.progress.setVisible(false);
 	}
 
 }

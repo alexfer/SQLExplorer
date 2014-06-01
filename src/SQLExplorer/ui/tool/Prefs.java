@@ -47,15 +47,14 @@ public class Prefs extends JDialog implements ActionListener {
 
 		chooseMysql.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent event) {
-				DirChooser.getInstance();
+			public void actionPerformed(ActionEvent event) {				
 				JFileChooser chooser = DirChooser.dialog(false);
-				int jfch = chooser.showOpenDialog(ui);
-				if (jfch == JFileChooser.APPROVE_OPTION) {
+				final int fch = chooser.showOpenDialog(ui);
+				if (fch == JFileChooser.APPROVE_OPTION) {
 					pathToMysql.setText(chooser.getSelectedFile().toString());
-				} else if (jfch == JFileChooser.CANCEL_OPTION) {
+				} else if (fch == JFileChooser.CANCEL_OPTION) {
 					chooser.setVisible(false);
-				}
+				}				
 			}
 		});
 		
@@ -73,15 +72,14 @@ public class Prefs extends JDialog implements ActionListener {
 
 		chooseMysqldump.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent event) {
-				DirChooser.getInstance();
+			public void actionPerformed(ActionEvent event) {				
 				JFileChooser chooser = DirChooser.dialog(false);
-				int jfch = chooser.showOpenDialog(ui);
-				if (jfch == JFileChooser.APPROVE_OPTION) {
+				final int fch = chooser.showOpenDialog(ui);
+				if (fch == JFileChooser.APPROVE_OPTION) {
 					pathToMysqldump.setText(chooser.getSelectedFile().toString());
-				} else if (jfch == JFileChooser.CANCEL_OPTION) {
+				} else if (fch == JFileChooser.CANCEL_OPTION) {
 					chooser.setVisible(false);
-				}
+				}				
 			}
 		});
 

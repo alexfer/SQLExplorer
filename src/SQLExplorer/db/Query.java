@@ -24,7 +24,7 @@ public class Query {
 			if (result.next()) {
 				collation = result.getString("Default collation");
 			}
-
+			result.close();
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}
@@ -37,7 +37,7 @@ public class Query {
 			while (result.next()) {
 				list.add(result.getString("Charset"));
 			}
-
+			result.close();
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}
@@ -50,7 +50,7 @@ public class Query {
 			while (result.next()) {
 				list.add(result.getString("Database"));
 			}
-
+			result.close();
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}
@@ -72,7 +72,7 @@ public class Query {
 				}
 				j++;
 			}
-
+			result.close();
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}
@@ -82,7 +82,7 @@ public class Query {
 	public void dropDatabase(String name) throws UISQLException {
 		try {
 			ui.statement.executeUpdate(String
-					.format("DROP DATABASE `%s`", name));
+					.format("DROP DATABASE `%s`", name));			
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}
@@ -103,6 +103,7 @@ public class Query {
 			for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
 				list.add(result.getMetaData().getColumnName(i));
 			}
+			result.close();
 		} catch (SQLException e) {
 			throw new UISQLException(e.getMessage());
 		}

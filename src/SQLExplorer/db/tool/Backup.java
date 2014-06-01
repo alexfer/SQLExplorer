@@ -112,7 +112,7 @@ public class Backup implements Runnable {
 	public void run() {
 		try {
 			final long[] finished = handle();
-			if (finished[0] == 0) {
+			if (finished[0] == 0) {				
 				exp.finished(finished[1]);
 			}
 		} catch (ToolException e) {

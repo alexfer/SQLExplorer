@@ -48,17 +48,17 @@ public class Restore implements Runnable {
 			Process exec = Runtime.getRuntime().exec(cmd);
 			try {
 				ArrayList<String> errors = new ArrayList<String>();
-				try {
-					BufferedReader buffer = new BufferedReader(
-							new InputStreamReader(exec.getErrorStream()));
+				BufferedReader buffer = new BufferedReader(
+						new InputStreamReader(exec.getErrorStream()));
+				try {					
 					String line = null;
-
 					while ((line = buffer.readLine()) != null) {
 						errors.add(line);
-					}
-					buffer.close();
+					}					
 				} catch (IOException ex) {
 					UI.logger.info(ex.toString());
+				} finally {
+					buffer.close();
 				}
 
 				proc = exec.waitFor();
@@ -86,9 +86,6 @@ public class Restore implements Runnable {
 			}
 		} catch (ToolException e) {
 			e.printStackTrace();
-		} finally {
-
 		}
-
 	}
 }

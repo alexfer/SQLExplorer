@@ -18,11 +18,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.db.tool.Restore;
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.components.FrameFooter;
 
 public class Import implements ActionListener {
 
@@ -62,15 +64,17 @@ public class Import implements ActionListener {
 
 		choose.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent event) {
-				DirChooser.getInstance();
+			public void actionPerformed(ActionEvent event) {				
 				JFileChooser chooser = DirChooser.dialog(false);
-				int jfch = chooser.showOpenDialog(ui);
-				if (jfch == JFileChooser.APPROVE_OPTION) {
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				        "SQL", "sql");
+				    chooser.setFileFilter(filter);
+				final int fch = chooser.showOpenDialog(ui);
+				if (fch == JFileChooser.APPROVE_OPTION) {
 					path.setText(chooser.getSelectedFile().toString());
-				} else if (jfch == JFileChooser.CANCEL_OPTION) {
+				} else if (fch == JFileChooser.CANCEL_OPTION) {
 					chooser.setVisible(false);
-				}
+				}				
 			}
 		});
 
@@ -108,7 +112,7 @@ public class Import implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			d.dispose();
-			ui.progress.setVisible(true);
+			FrameFooter.progress.setVisible(true);
 			Restore runner = new Restore(Import.this,
 					System.currentTimeMillis());
 			new Thread(runner).start();
@@ -134,12 +138,11 @@ public class Import implements ActionListener {
 		}
 		Date date = new Date(elapsed);
 		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		ui.setTitle(UI.title + " - Restore has been completed.");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));		
 		JOptionPane.showMessageDialog(ui,
 				"Database restore has been completed successfully.\nSpent time: "
 						+ formatter.format(date), "Import Completed",
 				JOptionPane.INFORMATION_MESSAGE);
-		ui.progress.setVisible(false);
+		FrameFooter.progress.setVisible(false);		
 	}
 }

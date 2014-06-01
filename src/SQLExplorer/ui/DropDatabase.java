@@ -8,12 +8,12 @@ import javax.swing.JOptionPane;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
 
-class DropDatabase extends Confirm implements ActionListener {
+public class DropDatabase extends Confirm implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private UI ui;
 
-	DropDatabase(UI ui) {
+	public DropDatabase(UI ui) {
 		this.ui = ui;
 	}
 
