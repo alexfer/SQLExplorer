@@ -5,8 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.tool.TUitl;
 
-public class Handler {
+public class Handler implements Runnable {
 	private UI ui;
 
 	public Handler(final UI ui) {
@@ -24,17 +25,22 @@ public class Handler {
 			} else if (!action.equals("drop")) {
 				ResultSet result = ui.statement.executeQuery(String.format(
 						"%s TABLE %s", action.toUpperCase(),
-						ui.join(names, ",")));
+						TUitl.join(names, ",")));
 				while (result.next()) {
 
 				}
 				result.close();
 			} else {
 				ui.statement.executeUpdate(String.format(
-						"DROP TABLE IF EXISTS %s", ui.join(names, ",")));
+						"DROP TABLE IF EXISTS %s", TUitl.join(names, ",")));
 			}
 		} catch (SQLException e) {			
 			throw new UISQLException(e.getMessage());
 		}
+	}
+
+	@Override
+	public void run() {
+				
 	}
 }

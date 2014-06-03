@@ -18,7 +18,7 @@ import javax.swing.SwingConstants;
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.UI;
-import SQLExplorer.ui.DropDatabase;
+import SQLExplorer.ui.tool.DropDatabase;
 import SQLExplorer.ui.tool.Export;
 import SQLExplorer.ui.tool.Import;
 

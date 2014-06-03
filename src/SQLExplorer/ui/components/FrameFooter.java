@@ -19,6 +19,7 @@ import SQLExplorer.db.Handler;
 import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.DatabaseTables;
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.tool.TUitl;
 
 public class FrameFooter extends JPanel {
 
@@ -43,7 +44,7 @@ public class FrameFooter extends JPanel {
 		add(progress);
 		progress.setVisible(false);
 
-		if (ui.in_array(UI.excludeDbs, ui.database.getSelectedItem().toString())) {
+		if (TUitl.inArray(UI.excludeDbs, ui.database.getSelectedItem().toString())) {
 			FrameHeader.drop.setEnabled(false);
 			handle.setEnabled(false);
 		}

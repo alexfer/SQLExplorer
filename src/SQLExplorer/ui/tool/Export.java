@@ -95,7 +95,7 @@ public class Export implements ActionListener {
 		dir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {				
-				JFileChooser chooser = FileChooser.dialog(true);
+				JFileChooser chooser = TFile.dialog(true);
 				final int fch = chooser.showOpenDialog(ui);
 				if (fch == JFileChooser.APPROVE_OPTION) {
 					path.setText(chooser.getSelectedFile().toString());

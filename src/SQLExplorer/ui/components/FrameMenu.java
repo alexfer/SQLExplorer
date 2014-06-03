@@ -12,8 +12,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import SQLExplorer.ui.NewDatabase;
 import SQLExplorer.ui.UI;
+import SQLExplorer.ui.tool.NewDatabase;
 import SQLExplorer.ui.tool.Prefs;
 
 public class FrameMenu extends JMenuBar {

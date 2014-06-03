@@ -1,4 +1,4 @@
-package SQLExplorer.ui;
+package SQLExplorer.ui.tool;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;

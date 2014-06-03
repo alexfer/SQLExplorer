@@ -65,7 +65,7 @@ public class Import implements ActionListener {
 		choose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {				
-				JFileChooser chooser = FileChooser.dialog(false);
+				JFileChooser chooser = TFile.dialog(false);
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				        "SQL", "sql");
 				    chooser.setFileFilter(filter);

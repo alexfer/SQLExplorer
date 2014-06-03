@@ -1,4 +1,4 @@
-package SQLExplorer.ui;
+package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -19,13 +19,14 @@ import javax.swing.KeyStroke;
 
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
+import SQLExplorer.ui.UI;
 
 public class NewDatabase extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private UI ui;
 	private JTextField dbName;
-	private JComboBox<Object> collation;
+	private JComboBox<Object> collation;	
 
 	public NewDatabase(final UI ui) {
 		super(ui, "Create Database", true);
@@ -83,7 +84,7 @@ public class NewDatabase extends JDialog {
 
 	private Action close = new AbstractAction() {
 
-		private static final long serialVersionUID = 5692304708975454149L;
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -99,7 +100,8 @@ public class NewDatabase extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			Object name = dbName.getText();
 			ComboBoxModel<?> model = ui.database.getModel();
-
+			boolean success = true;
+			String message = null;
 			boolean exists = false;
 
 			for (int i = 0; i < model.getSize(); i++) {
@@ -109,21 +111,25 @@ public class NewDatabase extends JDialog {
 				}
 			}
 			if (name.equals("")) {
-				JOptionPane.showMessageDialog(ui,
-						"Database Name can not be empty.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			} else if (exists) {
-				JOptionPane.showMessageDialog(ui, "Database '" + name
-						+ "' already exists. Please choose another name.",
-						"Error", JOptionPane.ERROR_MESSAGE);
+				success = false;
+				message = "Database Name can not be empty.";
+			}
+			if (exists) {
+				success = false;
+				message = "Database '" + name
+						+ "' already exists. Please choose another name.";
 				dbName.setText("");
+			}
+			if (!success) {
+				JOptionPane.showMessageDialog(ui, message, "Error",
+						JOptionPane.ERROR_MESSAGE);				
 			} else {
 				try {
 					new Query(ui).addDatabase(name.toString(), collation
 							.getSelectedItem().toString());
 				} catch (UISQLException ex) {
 					JOptionPane.showMessageDialog(ui, ex.getMessage()
-							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+							.toString(), "Error", JOptionPane.ERROR_MESSAGE);					
 				}
 				ui.database.addItem(name);
 				ui.database.updateUI();

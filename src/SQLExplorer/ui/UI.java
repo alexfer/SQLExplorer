@@ -3,7 +3,6 @@ package SQLExplorer.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.*;
 
 import javax.swing.AbstractAction;
@@ -20,6 +19,7 @@ import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.components.FrameFooter;
 import SQLExplorer.ui.components.FrameHeader;
 import SQLExplorer.ui.components.FrameMenu;
+import SQLExplorer.ui.tool.TUitl;
 
 public class UI extends JFrame {
 
@@ -104,7 +104,7 @@ public class UI extends JFrame {
 				setTitle(title + " - " + name);
 				renderTableList(new DatabaseTables(), name);
 				FrameFooter.handle.setSelectedIndex(0);
-				if (in_array(excludeDbs, name)) {
+				if (TUitl.inArray(excludeDbs, name)) {
 					FrameHeader.drop.setEnabled(false);
 					FrameFooter.handle.setEnabled(false);
 				}
@@ -119,23 +119,4 @@ public class UI extends JFrame {
 			repaint();
 		}
 	};
-
-	public boolean in_array(String[] haystack, String needle) {
-		for (int i = 0; i < haystack.length; i++) {
-			if (haystack[i].equals(needle)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public String join(ArrayList<?> parts, String separator) {
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < parts.size(); i++) {
-			builder.append(parts.get(i));
-			builder.append(separator.equals("") ? " " : separator);
-		}
-		builder.delete(builder.length() - 1, builder.length());
-		return builder.toString();
-	}
 }

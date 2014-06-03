@@ -10,6 +10,8 @@ import java.util.prefs.Preferences;
 
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Export;
+import SQLExplorer.ui.tool.TFile;
+import SQLExplorer.ui.tool.TUitl;
 
 public class Backup implements Runnable {
 	private Preferences prefs;
@@ -37,24 +39,24 @@ public class Backup implements Runnable {
 				name };
 
 		if (!exp.quick.isSelected()) {
-			args = Helper.removeArgument(args, "--quick");
+			args = TUitl.removeArgument(args, "--quick");
 		}
 
 		if (!exp.force.isSelected()) {
-			args = Helper.removeArgument(args, "--force");
+			args = TUitl.removeArgument(args, "--force");
 		}
 
 		if (!exp.drop.isSelected()) {
-			args = Helper.removeArgument(args, "--add-drop-database");
-			args = Helper.removeArgument(args, "--databases");
+			args = TUitl.removeArgument(args, "--add-drop-database");
+			args = TUitl.removeArgument(args, "--databases");
 		}
 
 		if (exp.tblSelected.size() > 0) {
 			for (String table : exp.tblSelected) {
-				args = Helper.appendArgument(args, table);
+				args = TUitl.appendArgument(args, table);
 			}
-			args = Helper.removeArgument(args, "--add-drop-database");
-			args = Helper.removeArgument(args, "--databases");
+			args = TUitl.removeArgument(args, "--add-drop-database");
+			args = TUitl.removeArgument(args, "--databases");
 		}
 
 		try {
@@ -73,7 +75,7 @@ public class Backup implements Runnable {
 			Process exec = Runtime.getRuntime().exec(cmd);
 			try {
 				InputStream in = exec.getInputStream();
-				Helper.copy(in, new File(file));
+				TFile.copy(in, new File(file));
 
 				ArrayList<String> errors = new ArrayList<String>();
 				try {
@@ -94,7 +96,7 @@ public class Backup implements Runnable {
 					return 0;
 				}
 				if (errors.size() > 0) {
-					throw new ToolException(exp.ui.join(errors, "\n"));
+					throw new ToolException(TUitl.join(errors, "\n"));
 				}
 
 			} catch (InterruptedException e) {

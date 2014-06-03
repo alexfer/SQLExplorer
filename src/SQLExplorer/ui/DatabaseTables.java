@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import SQLExplorer.ui.tool.TUitl;
+
 //import javax.swing.table.TableColumn;
 
 public class DatabaseTables extends DefaultTableCellRenderer {
@@ -65,10 +67,10 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 							data.get(i).get(1),
 							data.get(i).get(2),
 							data.get(i).get(3),
-							convert(Integer.parseInt(data.get(i).get(4))
+							TUitl.convert(Integer.parseInt(data.get(i).get(4))
 									+ Integer.parseInt(data.get(i).get(5)),
 									false),
-							convert(data.get(i).get(2).equals("MyISAM") ? Integer
+									TUitl.convert(data.get(i).get(2).equals("MyISAM") ? Integer
 									.parseInt(data.get(i).get(6)) : 0, false),
 							false });
 		}
@@ -120,15 +122,5 @@ public class DatabaseTables extends DefaultTableCellRenderer {
 		popup.add(browse);
 
 		return popup;
-	}
-
-	private String convert(int bytes, boolean si) {
-		int unit = si ? 1000 : 1024;
-		if (bytes < unit)
-			return bytes + " B";
-		int exp = (int) (Math.log(bytes) / Math.log(unit));
-		String pre = (si ? "kMGTPEZY" : "KMGTPEZY").charAt(exp - 1)
-				+ (si ? "" : "i");
-		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 }

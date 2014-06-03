@@ -48,7 +48,7 @@ public class Prefs extends JDialog implements ActionListener {
 		chooseMysql.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JFileChooser chooser = FileChooser.dialog(false);
+				JFileChooser chooser = TFile.dialog(false);
 				final int fch = chooser.showOpenDialog(ui);
 				if (fch == JFileChooser.APPROVE_OPTION) {
 					pathToMysql.setText(chooser.getSelectedFile().toString());
@@ -73,7 +73,7 @@ public class Prefs extends JDialog implements ActionListener {
 		chooseMysqldump.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JFileChooser chooser = FileChooser.dialog(false);
+				JFileChooser chooser = TFile.dialog(false);
 				final int fch = chooser.showOpenDialog(ui);
 				if (fch == JFileChooser.APPROVE_OPTION) {
 					pathToMysqldump.setText(chooser.getSelectedFile()

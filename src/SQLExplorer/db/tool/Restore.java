@@ -8,6 +8,7 @@ import java.util.prefs.Preferences;
 
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.Import;
+import SQLExplorer.ui.tool.TUitl;
 
 public class Restore implements Runnable {
 	private Preferences prefs;
@@ -31,7 +32,7 @@ public class Restore implements Runnable {
 				String.format(" source %s", path) };
 
 		if (!imp.force.isSelected()) {
-			args = Helper.removeArgument(args, "--force");
+			args = TUitl.removeArgument(args, "--force");
 		}
 
 		try {
@@ -63,7 +64,7 @@ public class Restore implements Runnable {
 
 				proc = exec.waitFor();
 				if (errors.size() > 0) {
-					throw new ToolException(imp.ui.join(errors, "\n"));
+					throw new ToolException(TUitl.join(errors, "\n"));
 				}
 
 			} catch (InterruptedException e) {

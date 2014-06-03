@@ -1,4 +1,4 @@
-package SQLExplorer.ui;
+package SQLExplorer.ui.tool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 
 import SQLExplorer.db.Query;
 import SQLExplorer.db.UISQLException;
+import SQLExplorer.ui.Confirm;
+import SQLExplorer.ui.UI;
 
 public class DropDatabase extends Confirm implements ActionListener {
 
