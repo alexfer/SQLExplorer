@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import SQLExplorer.db.Query;
-import SQLExplorer.db.UISQLException;
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.DropDatabase;
 import SQLExplorer.ui.tool.Export;
@@ -43,7 +43,7 @@ public class FrameHeader extends JPanel {
 			List<Object> dbs = new Query(ui).listDatabases();
 			ui.database = new JComboBox<Object>(
 					new DefaultComboBoxModel<Object>(dbs.toArray()));
-		} catch (UISQLException e) {
+		} catch (ErrorException e) {
 			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}

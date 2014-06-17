@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import SQLExplorer.db.Query;
-import SQLExplorer.db.UISQLException;
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 
 public class NewDatabase extends JDialog {
@@ -53,7 +53,7 @@ public class NewDatabase extends JDialog {
 			List<Object> charactesr = new Query(ui).getCharactes();
 			collation = new JComboBox<Object>(new DefaultComboBoxModel<Object>(
 					charactesr.toArray()));
-		} catch (UISQLException e) {
+		} catch (ErrorException e) {
 			JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -127,7 +127,7 @@ public class NewDatabase extends JDialog {
 				try {
 					new Query(ui).addDatabase(name.toString(), collation
 							.getSelectedItem().toString());
-				} catch (UISQLException ex) {
+				} catch (ErrorException ex) {
 					JOptionPane.showMessageDialog(ui, ex.getMessage()
 							.toString(), "Error", JOptionPane.ERROR_MESSAGE);					
 				}

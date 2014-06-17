@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import SQLExplorer.db.Handler;
-import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.DatabaseTables;
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.TUitl;
 
@@ -73,7 +73,7 @@ public class FrameFooter extends JPanel {
 				try {
 					handler.action(selected, handle.getSelectedItem()
 							.toString().toLowerCase());
-				} catch (UISQLException ex) {
+				} catch (ErrorException ex) {
 					JOptionPane.showMessageDialog(ui, ex.getMessage()
 							.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}

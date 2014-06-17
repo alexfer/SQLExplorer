@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import SQLExplorer.db.Query;
-import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.components.FrameFooter;
 import SQLExplorer.ui.components.FrameHeader;
 import SQLExplorer.ui.components.FrameMenu;
@@ -76,7 +75,7 @@ public class UI extends JFrame {
 		
 		try {
 			table = tables.render(new Query(this).listTables(db));
-		} catch (UISQLException e) {
+		} catch (ErrorException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		} finally {

@@ -3,7 +3,10 @@ bin
 .classpath
 .project
 .src
+build.xml
 
 /src/SQLExplorer/nbproject/private/
 /nbproject/private/
 /SQLExplorer/nbproject/private/
+/build/
+/nbproject/

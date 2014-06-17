@@ -17,7 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import SQLExplorer.db.Connect;
-import SQLExplorer.db.UISQLException;
 
 public class Init extends JFrame {
 
@@ -94,7 +93,7 @@ public class Init extends JFrame {
 					password.getText());
 			try {
 				statement = connect.createStatement();
-			} catch (UISQLException ex) {
+			} catch (ErrorException ex) {
 				JOptionPane.showMessageDialog(Init.this, ex.getMessage()
 						.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			}

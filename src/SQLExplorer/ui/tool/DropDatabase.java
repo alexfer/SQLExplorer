@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import SQLExplorer.db.Query;
-import SQLExplorer.db.UISQLException;
 import SQLExplorer.ui.Confirm;
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 
 public class DropDatabase extends Confirm implements ActionListener {
@@ -28,7 +28,7 @@ public class DropDatabase extends Confirm implements ActionListener {
 		if (index >= 0 && confirm) {
 			try {
 				new Query(ui).dropDatabase(name);
-			} catch (UISQLException e) {
+			} catch (ErrorException e) {
 				JOptionPane.showMessageDialog(ui, e.getMessage().toString(),
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}

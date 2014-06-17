@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 
 public class Query {
@@ -16,7 +17,7 @@ public class Query {
 		this.ui = ui;
 	}
 
-	private String getCollationAt(String charset) throws UISQLException {
+	private String getCollationAt(String charset) throws ErrorException {
 		String collation = null;
 		try {
 			result = ui.statement.executeQuery("SHOW CHARACTER SET LIKE '"
@@ -26,12 +27,12 @@ public class Query {
 			}
 			result.close();
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 		return collation;
 	}
 
-	public List<Object> getCharactes() throws UISQLException {
+	public List<Object> getCharactes() throws ErrorException {
 		try {
 			result = ui.statement.executeQuery("SHOW CHARACTER SET");
 			while (result.next()) {
@@ -39,12 +40,12 @@ public class Query {
 			}
 			result.close();
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 		return list;
 	}
 
-	public List<Object> listDatabases() throws UISQLException {
+	public List<Object> listDatabases() throws ErrorException {
 		try {
 			result = ui.statement.executeQuery("SHOW DATABASES");
 			while (result.next()) {
@@ -52,12 +53,12 @@ public class Query {
 			}
 			result.close();
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 		return list;
 	}
 
-	public List<ArrayList<String>> listTables(String db) throws UISQLException {
+	public List<ArrayList<String>> listTables(String db) throws ErrorException {
 		List<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
 		final String[] columns = { "Name", "Rows", "Engine", "Collation",
 				"Data_length", "Index_length", "Data_free" };
@@ -74,38 +75,38 @@ public class Query {
 			}
 			result.close();
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 		return rows;
 	}
 
-	public void dropDatabase(String name) throws UISQLException {
+	public void dropDatabase(String name) throws ErrorException {
 		try {
 			ui.statement.executeUpdate(String
 					.format("DROP DATABASE `%s`", name));			
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 	}
 
-	public void addDatabase(String name, String charset) throws UISQLException {
+	public void addDatabase(String name, String charset) throws ErrorException {
 		try {
 			ui.statement.executeUpdate(String.format(
 					"CREATE DATABASE `%s` CHARACTER SET %s COLLATE %s", name,
 					charset, getCollationAt(charset)));
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 	}
 
-	public List<Object> getMeta(ResultSet result) throws UISQLException {
+	public List<Object> getMeta(ResultSet result) throws ErrorException {
 		try {
 			for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
 				list.add(result.getMetaData().getColumnName(i));
 			}
 			result.close();
 		} catch (SQLException e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 		return list;
 	}

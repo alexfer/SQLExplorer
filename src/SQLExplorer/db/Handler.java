@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.tool.TUitl;
 
@@ -15,7 +16,7 @@ public class Handler implements Runnable {
 	}
 
 	public void action(ArrayList<String> names, String action)
-			throws UISQLException {
+			throws ErrorException {
 		try {
 			if (action.equals("empty")) {
 				for (int i = 0; i < names.size(); i++) {
@@ -35,7 +36,7 @@ public class Handler implements Runnable {
 						"DROP TABLE IF EXISTS %s", TUitl.join(names, ",")));
 			}
 		} catch (SQLException e) {			
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 	}
 

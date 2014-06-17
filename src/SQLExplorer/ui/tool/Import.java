@@ -21,8 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import SQLExplorer.db.Query;
-import SQLExplorer.db.UISQLException;
 import SQLExplorer.db.tool.Restore;
+import SQLExplorer.ui.ErrorException;
 import SQLExplorer.ui.UI;
 import SQLExplorer.ui.components.FrameFooter;
 
@@ -138,7 +138,7 @@ public class Import implements ActionListener {
 					dbs.toArray());
 			ui.database.setModel(model);
 			ui.database.setSelectedIndex(0);
-		} catch (UISQLException ex) {
+		} catch (ErrorException ex) {
 			JOptionPane.showMessageDialog(ui, ex.getMessage().toString(),
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}

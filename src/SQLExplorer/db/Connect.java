@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+import SQLExplorer.ui.ErrorException;
+
 public class Connect {
 	private String host, user, password;
 	private int port;
@@ -17,7 +19,7 @@ public class Connect {
 		this.password = password;
 	}
 
-	public Statement createStatement() throws UISQLException {
+	public Statement createStatement() throws ErrorException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection("jdbc:mysql://" + this.host
@@ -25,7 +27,7 @@ public class Connect {
 					+ "&password=" + this.password);
 			statement = connect.createStatement();
 		} catch (Exception e) {
-			throw new UISQLException(e.getMessage());
+			throw new ErrorException(e.getMessage());
 		}
 		return statement;
 	}
